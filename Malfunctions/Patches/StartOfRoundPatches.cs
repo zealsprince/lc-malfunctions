@@ -9,8 +9,6 @@ namespace Malfunctions.Patches
     [HarmonyPatch(typeof(StartOfRound))]
     public class StartOfRoundPatches
     {
-        private static readonly System.Random rand = new System.Random();
-
         [HarmonyPostfix]
         [HarmonyPatch("EndOfGame")]
         public static void TriggerMapMalfunction(StartOfRound __instance)
@@ -30,6 +28,17 @@ namespace Malfunctions.Patches
                     && TimeOfDay.Instance.daysUntilDeadline >= 2
                 )
                 {
+                    // Make the seed the current UTC day so everyone is synced up.
+                    int epochSeed = (int)
+                        (
+                            DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd"))
+                            - new DateTime(1970, 1, 1)
+                        ).TotalSeconds;
+
+                    Plugin.logger.LogDebug($"Syncing epoch: {epochSeed}");
+
+                    System.Random rand = new System.Random(epochSeed);
+
                     // Chance of navigation malfunctioning.
                     double chance = Config.MalfunctionNavigationChance.Value;
                     double roll = rand.NextDouble() * 100;
@@ -68,6 +77,7 @@ namespace Malfunctions.Patches
 
         [HarmonyPostfix]
         [HarmonyPatch("SetMapScreenInfoToCurrentLevel")]
+        [HarmonyAfter(new string[] { "jamil.corporate_restructure" })]
         public static void HandleMalfunction(StartOfRound __instance)
         {
             if (
@@ -127,7 +137,7 @@ namespace Malfunctions.Patches
 
         [HarmonyPostfix]
         [HarmonyPatch("Start")]
-        public static void Reset(StartOfRound __instance)
+        public static void Reset()
         {
             // Reset/setup the tracking of the malfunction states and objects.
             State.Reset();
