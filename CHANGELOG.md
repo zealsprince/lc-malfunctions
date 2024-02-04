@@ -4,7 +4,7 @@
 ## 1.1.1 ##
 
 - Add compatibility with Corporate Restructure (jamil.corporate_restructure)
-- Fix desync issue by binding random seed to daily UTC epoch
+- Fix desync issue by binding to map seed with added daily UTC epoch
 
 ## 1.1.0 ##
 

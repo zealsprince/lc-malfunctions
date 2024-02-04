@@ -28,16 +28,20 @@ namespace Malfunctions.Patches
                     && TimeOfDay.Instance.daysUntilDeadline >= 2
                 )
                 {
-                    // Make the seed the current UTC day so everyone is synced up.
-                    int epochSeed = (int)
+                    // Add the current epoch timestamp to the random map seed to still
+                    // sync up but have a varied experience not bound to seeds alone.
+                    int dailyEpochUTC = (int)
                         (
                             DateTime.Parse(DateTime.UtcNow.ToString("yyyy-MM-dd"))
                             - new DateTime(1970, 1, 1)
                         ).TotalSeconds;
 
-                    Plugin.logger.LogDebug($"Syncing epoch: {epochSeed}");
+                    int syncedSeed = __instance.randomMapSeed + dailyEpochUTC;
 
-                    System.Random rand = new System.Random(epochSeed);
+                    Plugin.logger.LogDebug($"Syncing epoch and map seed: {syncedSeed}");
+
+                    // Use our map seed combined with the epoch seed.
+                    System.Random rand = new System.Random(syncedSeed);
 
                     // Chance of navigation malfunctioning.
                     double chance = Config.MalfunctionNavigationChance.Value;
