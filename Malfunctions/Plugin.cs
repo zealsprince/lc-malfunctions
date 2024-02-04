@@ -1,51 +1,38 @@
-﻿
-using BepInEx;
+﻿using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
-
 using HarmonyLib;
 
 namespace Malfunctions
 {
-	[BepInPlugin(ModGUID, ModName, ModVersion)]
-	public class MalfunctionsBase : BaseUnityPlugin
-	{
-		public const string ModGUID = "zealsprince.Malfunctions";
-		public const string ModName = "Malfunctions";
-		public const string ModVersion = "1.0.0";
+    [BepInPlugin(ModGUID, ModName, ModVersion)]
+    public class Plugin : BaseUnityPlugin
+    {
+        public const string ModGUID = "com.zealsprince.malfunctions";
+        public const string ModName = "Malfunctions";
+        public const string ModVersion = "1.1.0";
 
-		public static ManualLogSource Log = BepInEx.Logging.Logger.CreateLogSource(ModGUID);
-		public static MalfunctionsBase Instance;
+        // These need to be lowercase because we're passing through the protected properties.
+        public static ManualLogSource logger;
+        public static ConfigFile config;
 
-		private readonly Harmony harmony = new Harmony(ModGUID);
+        private readonly Harmony harmony = new Harmony(ModGUID);
 
-		private void Awake() {
-			if (Instance is null) {
-				Instance = this;
-			}
+        private void Awake()
+        {
+            logger = Logger;
+            config = Config;
 
-			Log.LogDebug("Malfunctions has awoken!");
+            Malfunctions.Config.Load();
 
-			LoadConfigs();
+            // Make sure asset loading is completed successfully and abort otherwise.
+            if (Assets.Load() != Assets.LoadStatusCode.Success)
+                return;
 
-			harmony.PatchAll();
-		}
+            // Reset/setup the tracking of the malfunction states and objects.
+            State.Reset();
 
-		#region Config
-
-		public static ConfigEntry<double> ConfigMalfunctionNavigationChance;
-		private void LoadConfigs() {
-			ConfigMalfunctionNavigationChance = Config.Bind(
-				"Navigation Malfunction Chance",
-				"MalfunctionNavigationChance",
-				12.5,
-                new ConfigDescription(
-					"Set the chance of the navigation malfunction happening.",
-					new AcceptableValueRange<double>(0, 100)
-				)
-			);
-		}
-
-        #endregion
+            harmony.PatchAll();
+        }
     }
 }

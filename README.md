@@ -11,7 +11,7 @@ This mod adds random malfunctions to the ship and intends to improve the core ga
 
 This malfunction appears after the ship goes back into orbit. It overwrites all routing commands and steers the ship to a random moon at no cost. No information about the moon or the weather is given to the players forcing them to possibly go on a tough expedition.
 
-A warning is given after the ship enters orbit.
+A warning is given after the ship enters orbit. The terminal routing will be blocked until the ship leaves the rerouted planet.
 
 ### (Planned) Atomic Misalignment / Teleporter Malfunction ###
 
@@ -21,5 +21,4 @@ A warning during landing is given and once this happens the teleporters will emi
 
 ## Bugs / Todo ##
 
-- Routing to a moon after the navigation malfunctions is currently still possible
 - Make a distinctively different notification in style with the radiation pop-up
