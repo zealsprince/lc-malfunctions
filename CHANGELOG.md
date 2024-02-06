@@ -1,6 +1,11 @@
 
 # Changelog #
 
+## 1.2.1 ##
+
+- Adjust default probabilities
+- Attempt fix for issue #2: Weather stuck on all maps after navigational malfunction
+
 ## 1.2.0 ##
 
 - Add Power Malfunction

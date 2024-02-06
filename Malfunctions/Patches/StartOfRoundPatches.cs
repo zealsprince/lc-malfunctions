@@ -9,10 +9,10 @@ namespace Malfunctions.Patches
     [HarmonyPatch(typeof(StartOfRound))]
     internal class StartOfRoundPatches
     {
-        // When a round ends roll malfunction chances and set resulting states.
+        // When a round ends and players are revived, roll malfunction chances and set resulting states.
         // For navigation malfunction immediately set next moon.
         [HarmonyPostfix]
-        [HarmonyPatch("EndOfGame")]
+        [HarmonyPatch("ReviveDeadPlayers")]
         private static void RollMalfunctions(StartOfRound __instance)
         {
             // Add the current epoch timestamp to the random map seed to still

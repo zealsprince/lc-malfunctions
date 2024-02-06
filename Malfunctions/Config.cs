@@ -24,7 +24,7 @@ namespace Malfunctions
             MalfunctionTeleporterChance = Plugin.config.Bind(
                 "Chances",
                 "MalfunctionTeleporterChance",
-                5.0,
+                10.0,
                 new ConfigDescription(
                     "Set the chance of the teleporter malfunction happening - this will cause teleporters to disable themselves either at landing or after a random interval into the match",
                     new AcceptableValueRange<double>(0, 100)
@@ -36,7 +36,7 @@ namespace Malfunctions
                 "MalfunctionDistortionChance",
                 10.0,
                 new ConfigDescription(
-                    "Set the chance of the distortion malfunction happening - this will cause the map and terminal displays to become unusable after landing",
+                    "(Currently not implemented) Set the chance of the distortion malfunction happening - this will cause the map and terminal displays to become unusable after landing",
                     new AcceptableValueRange<double>(0, 100)
                 )
             );
@@ -44,7 +44,7 @@ namespace Malfunctions
             MalfunctionPowerChance = Plugin.config.Bind(
                 "Chances",
                 "MalfunctionPowerChance",
-                1.0,
+                5.0,
                 new ConfigDescription(
                     "Set the chance of the power malfunction happening - this will make the entire ship to go dark after landing, disabling battery charging, door controls, terminal and map displays",
                     new AcceptableValueRange<double>(0, 100)
