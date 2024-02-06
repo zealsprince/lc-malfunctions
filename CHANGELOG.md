@@ -1,6 +1,19 @@
 
 # Changelog #
 
+## 1.2.0 ##
+
+- Add Power Malfunction
+    + Notification plays while landing
+    + Disables the map display, terminal, teleporters, charging station and door controls
+- Add Teleporter Malfunction
+    + Has a chance of happening immediately or after a random interval
+    + Blocks players from using any ship teleporter
+    + Notification is broadcast once malfunction takes effect
+- Navigation Malfunction
+    + Fix company building being a possible route
+    + Fix notification playing when restarting a save
+
 ## 1.1.1 ##
 
 - Add compatibility with Corporate Restructure (jamil.corporate_restructure)

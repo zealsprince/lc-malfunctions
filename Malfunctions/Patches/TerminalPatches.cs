@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HarmonyLib;
+﻿using HarmonyLib;
+using UnityEngine;
 
 namespace Malfunctions.Patches
 {
     [HarmonyPatch(typeof(Terminal))]
     internal class TerminalPatches
     {
+        // Block the user from confirming a moon node.
         [HarmonyPrefix]
         [HarmonyPatch("LoadNewNodeIfAffordable")]
-        public static bool BlockNewNode(Terminal __instance, TerminalNode node)
+        private static bool BlockMoonConfirmNode(Terminal __instance, TerminalNode node)
         {
-            // Make sure we disallow the result of the action
-            if (State.malfunctionNavigation)
+            // Make sure we disallow the result of the action if the navigation malfunction is active.
+            if (State.MalfunctionNavigation.Active)
             {
                 // This checks if the current node has selected a moon. By default the value is < 0 if not.
                 if (node.buyRerouteToMoon > -1)

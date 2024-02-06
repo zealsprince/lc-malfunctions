@@ -29,8 +29,8 @@ namespace Malfunctions
             if (Assets.Load() != Assets.LoadStatusCode.Success)
                 return;
 
-            // Reset/setup the tracking of the malfunction states and objects.
-            State.Reset();
+            // Load the tracking of the malfunction states and objects.
+            State.Load();
 
             harmony.PatchAll();
         }

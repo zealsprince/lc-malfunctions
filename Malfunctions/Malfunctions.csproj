@@ -32,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoWarn>IDE0051</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
@@ -230,7 +231,15 @@
     <Compile Include="Assets.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Helpers\RandomHelper.cs" />
+    <Compile Include="Malfunction.cs" />
+    <Compile Include="MalfunctionPower.cs" />
+    <Compile Include="MalfunctionTeleporter.cs" />
+    <Compile Include="Patches\ShipLights.cs" />
+    <Compile Include="Patches\ItemChargerPatches.cs" />
+    <Compile Include="Patches\ManualCameraRendererPatches.cs" />
+    <Compile Include="Patches\ShipTeleporterPatches.cs" />
     <Compile Include="Patches\TerminalPatches.cs" />
+    <Compile Include="Patches\TimeOfDayPatches.cs" />
     <Compile Include="State.cs" />
     <Compile Include="Patches\StartOfRoundPatches.cs" />
     <Compile Include="Plugin.cs" />

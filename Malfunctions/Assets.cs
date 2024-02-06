@@ -56,7 +56,7 @@ namespace Malfunctions
             {
                 if (Prefabs.ContainsKey(name))
                 {
-                    Plugin.logger.LogInfo($"Loading prefab '{name}'");
+                    Plugin.logger.LogDebug($"Loading prefab '{name}'");
 
                     var gameObject = UnityEngine.Object.Instantiate(
                         Prefabs[name],
