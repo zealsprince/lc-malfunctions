@@ -1,6 +1,11 @@
 
 # Changelog #
 
+## 1.2.2 ##
+
+- Make sparks look a little less like cheese balls
+- Refactor internal asset loading
+
 ## 1.2.1 ##
 
 - Adjust default probabilities

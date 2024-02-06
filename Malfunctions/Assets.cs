@@ -10,6 +10,15 @@ namespace Malfunctions
         public static AssetBundle Bundle;
         public static Dictionary<string, GameObject> Prefabs = new Dictionary<string, GameObject>();
 
+        // Store all the assets here so we don't have to grep the code for it.
+        public static readonly Dictionary<string, string> Manifest = new Dictionary<
+            string,
+            string
+        >()
+        {
+            { "sparks", "assets/exported/malfunctions/effects/sparks.prefab" },
+        };
+
         public enum LoadStatusCode : ushort
         {
             Success = 0,
@@ -43,8 +52,12 @@ namespace Malfunctions
                 Plugin.logger.LogDebug($"Loaded asset: {asset}");
             }
 
-            // Add prefab definitions.
-            Prefabs.Add("sparks", Bundle.LoadAsset<GameObject>("Assets/sparks.prefab"));
+            // Iterate over our manifest and load the assets.
+            foreach (KeyValuePair<string, string> entry in Manifest)
+            {
+                // Add prefab definitions.
+                Prefabs.Add(entry.Key, Bundle.LoadAsset<GameObject>(entry.Value));
+            }
 
             return LoadStatusCode.Success;
         }
