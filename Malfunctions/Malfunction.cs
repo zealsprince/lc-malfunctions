@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Malfunctions.MonoBehaviours;
 using UnityEngine;
 
 namespace Malfunctions

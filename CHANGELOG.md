@@ -1,6 +1,11 @@
 
 # Changelog #
 
+## 1.2.3 ##
+
+- Fix #5: hangar door panel not reappearing after power malfunction ends 
+- Add lighting, depth buffer physics and sounds to sparks effect
+
 ## 1.2.2 ##
 
 - Make sparks look a little less like cheese balls

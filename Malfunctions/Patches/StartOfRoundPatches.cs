@@ -9,6 +9,9 @@ namespace Malfunctions.Patches
     [HarmonyPatch(typeof(StartOfRound))]
     internal class StartOfRoundPatches
     {
+        // Store objects which we search for by name and can't retrieve once inactive.
+        private static GameObject elevatorPanelScreen;
+
         // When a round ends and players are revived, roll malfunction chances and set resulting states.
         // For navigation malfunction immediately set next moon.
         [HarmonyPostfix]
@@ -197,8 +200,10 @@ namespace Malfunctions.Patches
                 }
 
                 // Restore the lights from the door controls.
-                GameObject elevatorPanelScreen = UnityEngine.GameObject.Find("ElevatorPanelScreen");
-                elevatorPanelScreen?.SetActive(true);
+                if (elevatorPanelScreen != null)
+                {
+                    elevatorPanelScreen.SetActive(true);
+                }
 
                 // Restore door functionality.
                 GameObject hangarDoorButtonPanel = UnityEngine.GameObject.Find(
@@ -311,10 +316,8 @@ namespace Malfunctions.Patches
                         terminal.terminalTrigger.interactable = false;
                     }
 
-                    // Remove the lights from the door controls.
-                    GameObject elevatorPanelScreen = UnityEngine.GameObject.Find(
-                        "ElevatorPanelScreen"
-                    );
+                    // Remove the lights from the door controls. Also assign to a variable so we can restore it later.
+                    elevatorPanelScreen = UnityEngine.GameObject.Find("ElevatorPanelScreen");
                     elevatorPanelScreen?.SetActive(false);
 
                     // Disable the button control triggers.
