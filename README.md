@@ -30,7 +30,7 @@ Ship terminal and map displays are either disabled immediately or after a random
 
 ### Crackdown Protocol / Door Malfunction ###
 
-This malfunction causes the ship door to remain closed until 11pm. The door controls are disabled as well.
+This malfunction causes the ship door to remain closed until 10pm. The door controls are disabled as well.
 
 A warning after triggering is given to all players.
 

@@ -1,6 +1,10 @@
 
 # Changelog #
 
+## 1.3.1 ##
+
+- Fix the readme stating that the door malfunction opens at 11pm when in actuality it opens at 10pm
+
 ## 1.3.0 ##
 
 - Add penalty mechanic
