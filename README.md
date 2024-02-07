@@ -4,7 +4,7 @@
 
 # Malfunctions #
 
-The ship has experienced its fair share of crews and their eventual expiration. Even though it's stood for long, it's got some scratches of its own and they're showing more and more as the days go on.
+*The ship has experienced its fair share of crews and their eventual expiration. Even though it's stood for long, it's got some scratches of its own and they're showing more and more as the days go on.*
 
 This mod adds random malfunctions to the ship and intends to improve the core game loop with interesting new metagame events.
 
@@ -18,9 +18,21 @@ A warning is given after the ship enters orbit. The terminal routing will be blo
 
 ### Atomic Misalignment / Teleporter Malfunction ###
 
-This malfunction causes teleporters to become temporarily unavailable during an expedition. It has a high chance of happening moments after landing but can also happen over the course of an expedition at a random moment.
+This malfunction causes teleporters to become temporarily unavailable during an expedition.
 
-A warning after landing is given. Ship teleporters are either disabled immediately or after a random interval.
+It has a high chance of happening moments after landing but can also happen over the course of an expedition at a random moment. A warning after triggering is given to all players.
+
+### Electromagnetic Disturbance / Communication Malfunction ###
+
+This malfunction causes the communication and map systems to fail during an expedition.
+
+Ship terminal and map displays are either disabled immediately or after a random interval. Walkie talkies lose functionality as well. A warning after triggering is given to all players. 
+
+### Crackdown Protocol / Door Malfunction ###
+
+This malfunction causes the ship door to remain closed until 11pm. The door controls are disabled as well.
+
+A warning after triggering is given to all players.
 
 ### Core Surge / Power Malfunction ###
 

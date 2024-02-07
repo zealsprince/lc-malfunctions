@@ -45,4 +45,40 @@ namespace Malfunctions
             DestroyChildren();
         }
     }
+
+    internal class MalfunctionWithTrigger : Malfunction
+    {
+        public bool Triggered;
+
+        public MalfunctionWithTrigger()
+            : base()
+        {
+            Triggered = false;
+        }
+
+        public override void Reset()
+        {
+            base.Reset();
+
+            Triggered = false;
+        }
+    }
+
+    internal class MalfunctionWithDelay : MalfunctionWithTrigger
+    {
+        public int Delay;
+
+        public MalfunctionWithDelay()
+            : base()
+        {
+            Delay = 0;
+        }
+
+        public override void Reset()
+        {
+            base.Reset();
+
+            Delay = 0;
+        }
+    }
 }

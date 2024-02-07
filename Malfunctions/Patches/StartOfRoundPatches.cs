@@ -11,6 +11,24 @@ namespace Malfunctions.Patches
     {
         // Store objects which we search for by name and can't retrieve once inactive.
         private static GameObject elevatorPanelScreen;
+        private static bool hadUnrecoveredDeadPlayers;
+
+        // Check if there were any dead players. Required for the malfunction penalty.
+        [HarmonyPostfix]
+        [HarmonyPatch("EndOfGame")]
+        private static void CheckDeadPlayers(StartOfRound __instance)
+        {
+            int deadPlayers = 1 + __instance.connectedPlayersAmount - __instance.livingPlayers;
+
+            if (__instance.GetBodiesInShip() < deadPlayers)
+            {
+                hadUnrecoveredDeadPlayers = true;
+            }
+            else
+            {
+                hadUnrecoveredDeadPlayers = false;
+            }
+        }
 
         // When a round ends and players are revived, roll malfunction chances and set resulting states.
         // For navigation malfunction immediately set next moon.
@@ -18,6 +36,8 @@ namespace Malfunctions.Patches
         [HarmonyPatch("ReviveDeadPlayers")]
         private static void RollMalfunctions(StartOfRound __instance)
         {
+            #region Chance Rolls
+
             // Add the current epoch timestamp to the random map seed to still
             // sync up but have a varied experience not bound to seeds alone.
             int dailyEpochUTC = (int)
@@ -38,41 +58,66 @@ namespace Malfunctions.Patches
             double malfunctionTeleporterRoll = rand.NextDouble() * 100;
             double malfunctionDistortionRoll = rand.NextDouble() * 100;
             double malfunctionPowerRoll = rand.NextDouble() * 100;
+            double malfunctionDoorRoll = rand.NextDouble() * 100;
+
+            // Penalty multiplier if a body wasn't recovered.
+            double multiplier = 1;
+            if (Config.MalfunctionPenaltyEnabled.Value && hadUnrecoveredDeadPlayers == true)
+            {
+                multiplier = Config.MalfunctionPenaltyMultiplier.Value;
+
+                Plugin.logger.LogDebug(
+                    "Had unrecovered players. Increasing malfunction multiplier for this round."
+                );
+            }
 
             // Check our rolls.
             bool malfunctionNavigationRollSucceeded =
                 Config.MalfunctionNavigationChance.Value != 0
-                && malfunctionNavigationRoll < Config.MalfunctionNavigationChance.Value;
+                && malfunctionNavigationRoll
+                    < Config.MalfunctionNavigationChance.Value * multiplier;
 
             bool malfunctionTeleporterRollSucceeded =
                 Config.MalfunctionTeleporterChance.Value != 0
-                && malfunctionTeleporterRoll < Config.MalfunctionTeleporterChance.Value;
+                && malfunctionTeleporterRoll
+                    < Config.MalfunctionTeleporterChance.Value * multiplier;
 
             bool malfunctionDistortionRollSucceeded =
                 Config.MalfunctionDistortionChance.Value != 0
-                && malfunctionDistortionRoll < Config.MalfunctionDistortionChance.Value;
+                && malfunctionDistortionRoll
+                    < Config.MalfunctionDistortionChance.Value * multiplier;
+
+            bool malfunctionDoorRollSucceeded =
+                Config.MalfunctionDoorChance.Value != 0
+                && malfunctionDoorRoll < Config.MalfunctionDoorChance.Value * multiplier;
 
             bool malfunctionPowerRollSucceeded =
                 Config.MalfunctionPowerChance.Value != 0
-                && malfunctionPowerRoll < Config.MalfunctionPowerChance.Value;
+                && malfunctionPowerRoll < Config.MalfunctionPowerChance.Value * multiplier;
 
             Plugin.logger.LogDebug(
-                $"Malfunction Navigation Roll: {malfunctionNavigationRoll} < {Config.MalfunctionNavigationChance.Value} ({(malfunctionNavigationRollSucceeded ? "SUCCESS" : "FAIL")})"
+                $"Malfunction Navigation Roll: {malfunctionNavigationRoll} < {Config.MalfunctionNavigationChance.Value * multiplier} ({(malfunctionNavigationRollSucceeded ? "SUCCESS" : "FAIL")})"
             );
 
             Plugin.logger.LogDebug(
-                $"Malfunction Teleporter Roll: {malfunctionTeleporterRoll} < {Config.MalfunctionTeleporterChance.Value} ({(malfunctionTeleporterRollSucceeded ? "SUCCESS" : "FAIL")})"
+                $"Malfunction Teleporter Roll: {malfunctionTeleporterRoll} < {Config.MalfunctionTeleporterChance.Value * multiplier} ({(malfunctionTeleporterRollSucceeded ? "SUCCESS" : "FAIL")})"
             );
 
             Plugin.logger.LogDebug(
-                $"Malfunction Distortion Roll: {malfunctionDistortionRoll} < {Config.MalfunctionDistortionChance.Value} ({(malfunctionDistortionRollSucceeded ? "SUCCESS" : "FAIL")})"
+                $"Malfunction Distortion Roll: {malfunctionDistortionRoll} < {Config.MalfunctionDistortionChance.Value * multiplier} ({(malfunctionDistortionRollSucceeded ? "SUCCESS" : "FAIL")})"
             );
 
             Plugin.logger.LogDebug(
-                $"Malfunction Power Roll: {malfunctionPowerRoll} < {Config.MalfunctionPowerChance.Value} ({(malfunctionPowerRollSucceeded ? "SUCCESS" : "FAIL")})"
+                $"Malfunction Power Roll: {malfunctionDoorRoll} < {Config.MalfunctionDoorChance.Value * multiplier} ({(malfunctionDoorRollSucceeded ? "SUCCESS" : "FAIL")})"
+            );
+
+            Plugin.logger.LogDebug(
+                $"Malfunction Power Roll: {malfunctionPowerRoll} < {Config.MalfunctionPowerChance.Value * multiplier} ({(malfunctionPowerRollSucceeded ? "SUCCESS" : "FAIL")})"
             );
 
             // Plugin.logger.LogDebug($"Days left: {TimeOfDay.Instance.daysUntilDeadline}");
+
+            #endregion
 
             #region Navigation
 
@@ -95,6 +140,9 @@ namespace Malfunctions.Patches
                         SelectableLevel[] filteredLevels = __instance
                             .levels.Where(level => level.name != "CompanyBuildingLevel")
                             .ToArray();
+
+                        // TODO: Figure out how to get the value of a moon outside of the terminal node.
+                        if (Config.MalfunctionNavigationBlockAboveQuota.Value) { }
 
                         // Select the next random level from the list of all levels.
                         SelectableLevel selected = rand.NextFromCollection(filteredLevels);
@@ -162,7 +210,7 @@ namespace Malfunctions.Patches
 
             #region Distortion
 
-            // If we previously had a teleporter malfunction make sure to reset it and any children.
+            // If we previously had a distortion malfunction make sure to reset it and any children.
             if (State.MalfunctionDistortion.Active || TimeOfDay.Instance.daysUntilDeadline < 2)
             {
                 State.MalfunctionDistortion.Reset();
@@ -178,7 +226,67 @@ namespace Malfunctions.Patches
                 {
                     if (malfunctionDistortionRollSucceeded)
                     {
+                        // Set the distortion hour delay.
+                        State.MalfunctionDistortion.Delay = rand.Next(12);
+
                         State.MalfunctionDistortion.Active = true;
+
+                        Plugin.logger.LogDebug(
+                            $"Distortion malfunction will trigger at {7 + State.MalfunctionDistortion.Delay}:00"
+                        );
+                    }
+                }
+            }
+
+            #endregion
+
+            #region Door
+
+            // If we previously had a distortion malfunction make sure to reset it and any children.
+            if (State.MalfunctionDoor.Active || TimeOfDay.Instance.daysUntilDeadline < 2)
+            {
+                State.MalfunctionDoor.Reset();
+
+                // Restore the lights from the door controls.
+                elevatorPanelScreen?.SetActive(true);
+
+                // Restore door functionality.
+                GameObject hangarDoorButtonPanel = UnityEngine.GameObject.Find(
+                    "HangarDoorButtonPanel"
+                );
+                if (hangarDoorButtonPanel != null)
+                {
+                    InteractTrigger[] triggers =
+                        hangarDoorButtonPanel.GetComponentsInChildren<InteractTrigger>(true);
+
+                    foreach (InteractTrigger trigger in triggers)
+                    {
+                        trigger.interactable = true;
+                    }
+                }
+            }
+            // Make sure we don't trigger this malfunction if the power one is in place.
+            else if (!State.MalfunctionPower.Active)
+            {
+                // Make sure we can't trigger the distortion malfunction on the last day.
+                if (
+                    __instance.currentLevel.name != "CompanyBuildingLevel"
+                    && TimeOfDay.Instance.daysUntilDeadline >= 2
+                )
+                {
+                    if (malfunctionDoorRollSucceeded)
+                    {
+                        // Make sure we capture the door panel for later.
+                        elevatorPanelScreen = UnityEngine.GameObject.Find("ElevatorPanelScreen");
+
+                        // Set the door hour delay.
+                        State.MalfunctionDoor.Delay = 4 + rand.Next(8);
+
+                        State.MalfunctionDoor.Active = true;
+
+                        Plugin.logger.LogDebug(
+                            $"Door malfunction will trigger at {7 + State.MalfunctionDoor.Delay}:00"
+                        );
                     }
                 }
             }
@@ -200,10 +308,7 @@ namespace Malfunctions.Patches
                 }
 
                 // Restore the lights from the door controls.
-                if (elevatorPanelScreen != null)
-                {
-                    elevatorPanelScreen.SetActive(true);
-                }
+                elevatorPanelScreen?.SetActive(true);
 
                 // Restore door functionality.
                 GameObject hangarDoorButtonPanel = UnityEngine.GameObject.Find(

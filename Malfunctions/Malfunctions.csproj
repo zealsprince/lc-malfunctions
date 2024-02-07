@@ -232,10 +232,10 @@
     <Compile Include="Config.cs" />
     <Compile Include="Helpers\RandomHelper.cs" />
     <Compile Include="Malfunction.cs" />
-    <Compile Include="MalfunctionPower.cs" />
-    <Compile Include="MalfunctionTeleporter.cs" />
     <Compile Include="MonoBehaviors\Sparks.cs" />
-    <Compile Include="Patches\ShipLights.cs" />
+    <Compile Include="Patches\HangarShipDoorPatches.cs" />
+    <Compile Include="Patches\WalkieTalkiePatches.cs" />
+    <Compile Include="Patches\ShipLightsPatches.cs" />
     <Compile Include="Patches\ItemChargerPatches.cs" />
     <Compile Include="Patches\ManualCameraRendererPatches.cs" />
     <Compile Include="Patches\ShipTeleporterPatches.cs" />

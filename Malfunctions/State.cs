@@ -4,16 +4,18 @@
     {
         // Track our malfunctions.
         public static Malfunction MalfunctionNavigation;
-        public static MalfunctionTeleporter MalfunctionTeleporter;
-        public static Malfunction MalfunctionDistortion;
-        public static MalfunctionPower MalfunctionPower;
+        public static MalfunctionWithDelay MalfunctionTeleporter;
+        public static MalfunctionWithDelay MalfunctionDistortion;
+        public static MalfunctionWithDelay MalfunctionDoor;
+        public static MalfunctionWithTrigger MalfunctionPower;
 
         public static void Load()
         {
             MalfunctionNavigation = new Malfunction();
-            MalfunctionTeleporter = new MalfunctionTeleporter();
-            MalfunctionDistortion = new Malfunction();
-            MalfunctionPower = new MalfunctionPower();
+            MalfunctionTeleporter = new MalfunctionWithDelay();
+            MalfunctionDistortion = new MalfunctionWithDelay();
+            MalfunctionDoor = new MalfunctionWithDelay();
+            MalfunctionPower = new MalfunctionWithTrigger();
         }
 
         public static void Reset()
@@ -22,6 +24,7 @@
             MalfunctionNavigation.Reset();
             MalfunctionTeleporter.Reset();
             MalfunctionDistortion.Reset();
+            MalfunctionDoor.Reset();
             MalfunctionPower.Reset();
         }
     }

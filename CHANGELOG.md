@@ -1,6 +1,17 @@
 
 # Changelog #
 
+## 1.3.0 ##
+
+- Add penalty mechanic
+    + Not recovering a body multiplies the chance of encountering malfunctions
+- Add Door Malfunction
+    + Has a chance of happening after 4 hours and beyond into the round
+    + Causes doors to remain closed with door controls disabled until 10pm
+- Add Distortion Malfunction
+    + Has a chance of happening immediately or after a random interval
+    + Disables the map display, terminal and walkies
+
 ## 1.2.3 ##
 
 - Fix #5: hangar door panel not reappearing after power malfunction ends 
