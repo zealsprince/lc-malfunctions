@@ -1,6 +1,13 @@
 
 # Changelog #
 
+## 1.4.0 ##
+
+- Make Power Malfunction have a chance at not being able to take-off until autopilot
+- Fix Navigation Malfunction causing the ship to get stuck
+- Fix Communication Malfunction not re-enabling the terminal
+- Make teleporter during communication outage teleport a random player
+
 ## 1.3.1 ##
 
 - Fix the readme stating that the door malfunction opens at 11pm when in actuality it opens at 10pm

@@ -234,6 +234,7 @@
     <Compile Include="Malfunction.cs" />
     <Compile Include="MonoBehaviors\Sparks.cs" />
     <Compile Include="Patches\HangarShipDoorPatches.cs" />
+    <Compile Include="Patches\StartMatchLeverPatches.cs" />
     <Compile Include="Patches\WalkieTalkiePatches.cs" />
     <Compile Include="Patches\ShipLightsPatches.cs" />
     <Compile Include="Patches\ItemChargerPatches.cs" />

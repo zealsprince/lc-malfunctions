@@ -15,6 +15,9 @@ namespace Malfunctions
 
         public static ConfigEntry<bool> MalfunctionNavigationBlockAboveQuota;
 
+        public static ConfigEntry<bool> MalfunctionPowerBlockLever;
+        public static ConfigEntry<double> MalfunctionPowerBlockLeverChance;
+
         public static void Load()
         {
             MalfunctionNavigationChance = Plugin.config.Bind(
@@ -95,6 +98,25 @@ namespace Malfunctions
                 )
             );
             */
+
+            MalfunctionPowerBlockLever = Plugin.config.Bind(
+                "Power Malfunction",
+                "MalfunctionPowerBlockLever",
+                true,
+                new ConfigDescription(
+                    "Enable a chance of pulling the lever and taking off blocking when the power malfunction is active"
+                )
+            );
+
+            MalfunctionPowerBlockLeverChance = Plugin.config.Bind(
+                "Power Malfunction",
+                "MalfunctionPowerBlockLeverChance",
+                50.0,
+                new ConfigDescription(
+                    "Chance that pulling the lever will not cause take-off",
+                    new AcceptableValueRange<double>(0, 100)
+                )
+            );
         }
     }
 }

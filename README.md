@@ -1,5 +1,5 @@
 
-<img src="https://img.shields.io/badge/version-1.3.1-0AF" /></a>
+<img src="https://img.shields.io/badge/version-1.4.0-0AF" /></a>
 <img src="https://img.shields.io/badge/lc--version-v49-000" /></a>
 
 # Malfunctions #
@@ -18,31 +18,29 @@ A warning is given after the ship enters orbit. The terminal routing will be blo
 
 ### Atomic Misalignment / Teleporter Malfunction ###
 
-This malfunction causes teleporters to become temporarily unavailable during an expedition.
+This malfunction causes teleporters to become temporarily disabled during an expedition.
 
 It has a high chance of happening moments after landing but can also happen over the course of an expedition at a random moment. A warning after triggering is given to all players.
 
 ### Electromagnetic Disturbance / Communication Malfunction ###
 
-This malfunction causes the communication and map systems to fail during an expedition.
+This malfunction causes the communication and map systems to fail during an expedition. Teleporters are still functional but target players at random. Use with caution.
 
 Ship terminal and map displays are either disabled immediately or after a random interval. Walkie talkies lose functionality as well. A warning after triggering is given to all players. 
 
 ### Crackdown Protocol / Door Malfunction ###
 
-This malfunction causes the ship door to remain closed until 10pm. The door controls are disabled as well.
+This malfunction causes the ship to go into a lockdown, causing the door to remain closed until 10pm. The door controls are disabled as well.
 
-A warning after triggering is given to all players.
+The malfunction triggers randomly over the course of a day if it's active. A warning after triggering is given to all players.
 
 ### Core Surge / Power Malfunction ###
 
-This malfunction causes the ship to lose power to all its primary systems. This means batteries can not be recharged, doors can't be closed, the map can't be used, players can't be teleported and the terminal remains disabled. This is the worst type of malfunction.
+This malfunction causes the ship to lose power to all its primary systems. This means batteries can not be recharged, doors can't be closed, the map can't be used, players can't be teleported and the terminal remains disabled. Furthermore, there might not be enough energy left to take off with only the emergency autopilot being the last option.
 
-To add onto that, no warning is given with this malfunction. The only solution to restore power is to use the remainder to launch back into orbit.
+This is the worst type of malfunction.
 
-## Bugs / Todo ##
-
-- Make a distinctively different notification in style with the radiation pop-up
+To add onto that, no warning is given with this malfunction. The only solution to restore power is to use the remainder to launch back into orbit, possibly only through the autopilot reserves.
 
 ## Suggestions ##
 

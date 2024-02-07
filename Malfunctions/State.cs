@@ -7,7 +7,7 @@
         public static MalfunctionWithDelay MalfunctionTeleporter;
         public static MalfunctionWithDelay MalfunctionDistortion;
         public static MalfunctionWithDelay MalfunctionDoor;
-        public static MalfunctionWithTrigger MalfunctionPower;
+        public static MalfunctionWithDelay MalfunctionPower;
 
         public static void Load()
         {
@@ -15,7 +15,7 @@
             MalfunctionTeleporter = new MalfunctionWithDelay();
             MalfunctionDistortion = new MalfunctionWithDelay();
             MalfunctionDoor = new MalfunctionWithDelay();
-            MalfunctionPower = new MalfunctionWithTrigger();
+            MalfunctionPower = new MalfunctionWithDelay();
         }
 
         public static void Reset()

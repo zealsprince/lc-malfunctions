@@ -1,4 +1,7 @@
-﻿using HarmonyLib;
+﻿using System.Linq;
+using GameNetcodeStuff;
+using HarmonyLib;
+using UnityEngine;
 
 namespace Malfunctions.Patches
 {
@@ -23,6 +26,28 @@ namespace Malfunctions.Patches
             }
 
             return true;
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("PressTeleportButtonOnLocalClient")]
+        private static void RandomizePressTeleportButton()
+        {
+            // When the distortion malfunction is active, set the teleporting player to a random one.
+            if (State.MalfunctionDistortion.Active && State.MalfunctionDistortion.Triggered)
+            {
+                PlayerControllerB[] players = GameObject
+                    .FindObjectsByType<PlayerControllerB>(FindObjectsSortMode.None)
+                    .Where(player => player.isPlayerControlled)
+                    .ToArray();
+
+                if (players.Length > 0)
+                {
+                    // Select a random player.
+                    StartOfRound.Instance.mapScreen.targetedPlayer = players[
+                        Random.Range(0, players.Length)
+                    ];
+                }
+            }
         }
     }
 }

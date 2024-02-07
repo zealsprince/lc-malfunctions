@@ -142,7 +142,7 @@ namespace Malfunctions.Patches
                             .ToArray();
 
                         // TODO: Figure out how to get the value of a moon outside of the terminal node.
-                        if (Config.MalfunctionNavigationBlockAboveQuota.Value) { }
+                        // if (Config.MalfunctionNavigationBlockAboveQuota.Value) { }
 
                         // Select the next random level from the list of all levels.
                         SelectableLevel selected = rand.NextFromCollection(filteredLevels);
@@ -214,6 +214,13 @@ namespace Malfunctions.Patches
             if (State.MalfunctionDistortion.Active || TimeOfDay.Instance.daysUntilDeadline < 2)
             {
                 State.MalfunctionDistortion.Reset();
+
+                // Restore terminal functionality.
+                Terminal terminal = UnityEngine.Object.FindObjectOfType<Terminal>();
+                if (terminal != null)
+                {
+                    terminal.terminalTrigger.interactable = true;
+                }
             }
             // Make sure we don't trigger this malfunction if the power one is in place.
             else if (!State.MalfunctionPower.Active)
@@ -336,6 +343,24 @@ namespace Malfunctions.Patches
                     if (malfunctionPowerRollSucceeded)
                     {
                         State.MalfunctionPower.Active = true;
+
+                        double blockLeverRoll = rand.NextDouble() * 100;
+                        bool blockLeverSucceeded =
+                            Config.MalfunctionPowerBlockLeverChance.Value != 0
+                            && blockLeverRoll < Config.MalfunctionPowerBlockLeverChance.Value;
+
+                        if (Config.MalfunctionPowerBlockLever.Value && blockLeverSucceeded)
+                        {
+                            State.MalfunctionPower.Delay = 1;
+                        }
+                        else
+                        {
+                            State.MalfunctionPower.Delay = 0;
+                        }
+
+                        Plugin.logger.LogDebug(
+                            $"Malfunction Power - Block Lever Roll : {blockLeverRoll} < {Config.MalfunctionPowerBlockLeverChance.Value} ({(blockLeverSucceeded ? "SUCCESS" : "FAIL")})"
+                        );
                     }
                 }
             }
