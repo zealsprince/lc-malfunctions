@@ -25,7 +25,10 @@ namespace Malfunctions.Patches
             )
             {
                 // If the total  time is past our delay, trigger the teleporter timeout.
-                if (__instance.hour >= 1 + State.MalfunctionTeleporter.Delay)
+                if (
+                    __instance.currentDayTimeStarted
+                    && __instance.hour >= 1 + State.MalfunctionTeleporter.Delay
+                )
                 {
                     Plugin.logger.LogDebug($"Triggered teleporter malfunction!");
 
@@ -87,7 +90,10 @@ namespace Malfunctions.Patches
             )
             {
                 // If the total  time is past our delay, trigger the distortion effect.
-                if (__instance.hour >= 1 + State.MalfunctionDistortion.Delay)
+                if (
+                    __instance.currentDayTimeStarted
+                    && __instance.hour >= 1 + State.MalfunctionDistortion.Delay
+                )
                 {
                     Plugin.logger.LogDebug($"Triggered distortion malfunction!");
 
@@ -151,7 +157,11 @@ namespace Malfunctions.Patches
             )
             {
                 // If the total  time is past our delay, trigger the teleporter timeout. Don't trigger after 10pm if reset.
-                if (__instance.hour >= 1 + State.MalfunctionDoor.Delay && __instance.hour < 16)
+                if (
+                    __instance.currentDayTimeStarted
+                    && __instance.hour >= 1 + State.MalfunctionDoor.Delay
+                    && __instance.hour < 16
+                )
                 {
                     Plugin.logger.LogDebug($"Triggered door malfunction!");
 

@@ -188,7 +188,7 @@ namespace Malfunctions.Patches
                         if (UnityEngine.Object.FindObjectOfType<ShipTeleporter>() != null)
                         {
                             // Set the teleporter hour delay.
-                            State.MalfunctionTeleporter.Delay = rand.Next(12);
+                            State.MalfunctionTeleporter.Delay = 1 + rand.Next(11);
 
                             State.MalfunctionTeleporter.Active = true;
 
@@ -234,7 +234,7 @@ namespace Malfunctions.Patches
                     if (malfunctionDistortionRollSucceeded)
                     {
                         // Set the distortion hour delay.
-                        State.MalfunctionDistortion.Delay = rand.Next(12);
+                        State.MalfunctionDistortion.Delay = rand.Next(0);
 
                         State.MalfunctionDistortion.Active = true;
 

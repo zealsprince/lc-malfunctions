@@ -252,7 +252,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y /d "$(ProjectDir)bin\$(ProjectName).dll" "C:\Users\andre\AppData\Roaming\r2modmanPlus-local\LethalCompany\profiles\IDE\BepInEx\plugins\zealsprince-Malfunctions\"</PostBuildEvent>
+    <PostBuildEvent>xcopy /y "$(ProjectDir)bin\$(ProjectName).dll" "C:\Users\andre\AppData\Roaming\r2modmanPlus-local\LethalCompany\profiles\IDE\BepInEx\plugins\zealsprince-Malfunctions\"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>

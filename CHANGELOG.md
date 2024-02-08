@@ -1,6 +1,12 @@
 
 # Changelog #
 
+## 1.4.1 ##
+
+- Fix #10: sparks were playing sound without spacialization meaning they could be heard everywhere
+- Fix sparks collision depth buffer issue causing the players HUD to effect their collision (could cause sparks to get stuck in the players vision)
+- Fix timed malfunctions triggering before the start of a mission if they were early in a day or past the previous level's take-off time of day
+
 ## 1.4.0 ##
 
 - Make Power Malfunction have a chance at not being able to take-off until autopilot
