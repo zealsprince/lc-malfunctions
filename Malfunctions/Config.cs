@@ -4,25 +4,30 @@ namespace Malfunctions
 {
     public class Config
     {
-        public static ConfigEntry<double> MalfunctionNavigationChance;
-        public static ConfigEntry<double> MalfunctionTeleporterChance;
-        public static ConfigEntry<double> MalfunctionDistortionChance;
-        public static ConfigEntry<double> MalfunctionDoorChance;
-        public static ConfigEntry<double> MalfunctionPowerChance;
+        public static ConfigEntry<double> MalfunctionChanceNavigation;
+        public static ConfigEntry<double> MalfunctionChanceTeleporter;
+        public static ConfigEntry<double> MalfunctionChanceDistortion;
+        public static ConfigEntry<double> MalfunctionChanceDoor;
+        public static ConfigEntry<double> MalfunctionChancePower;
+
+        public static ConfigEntry<int> MalfunctionPassedDaysNavigation;
+        public static ConfigEntry<int> MalfunctionPassedDaysTeleporter;
+        public static ConfigEntry<int> MalfunctionPassedDaysDistortion;
+        public static ConfigEntry<int> MalfunctionPassedDaysDoor;
+        public static ConfigEntry<int> MalfunctionPassedDaysPower;
 
         public static ConfigEntry<bool> MalfunctionPenaltyEnabled;
+        public static ConfigEntry<bool> MalfunctionPenaltyOnly;
         public static ConfigEntry<double> MalfunctionPenaltyMultiplier;
-
-        public static ConfigEntry<bool> MalfunctionNavigationBlockAboveQuota;
 
         public static ConfigEntry<bool> MalfunctionPowerBlockLever;
         public static ConfigEntry<double> MalfunctionPowerBlockLeverChance;
 
         public static void Load()
         {
-            MalfunctionNavigationChance = Plugin.config.Bind(
+            MalfunctionChanceNavigation = Plugin.config.Bind(
                 "Chances",
-                "MalfunctionNavigationChance",
+                "MalfunctionChanceNavigation",
                 7.5,
                 new ConfigDescription(
                     "Set the chance of the navigation malfunction happening - this will force the ship to route to a random moon with no regard to cost",
@@ -30,43 +35,88 @@ namespace Malfunctions
                 )
             );
 
-            MalfunctionTeleporterChance = Plugin.config.Bind(
+            MalfunctionChanceTeleporter = Plugin.config.Bind(
                 "Chances",
-                "MalfunctionTeleporterChance",
-                5.0,
+                "MalfunctionChanceTeleporter",
+                7.5,
                 new ConfigDescription(
                     "Set the chance of the teleporter malfunction happening - this will cause teleporters to disable themselves either at landing or after a random interval into the match",
                     new AcceptableValueRange<double>(0, 100)
                 )
             );
 
-            MalfunctionDistortionChance = Plugin.config.Bind(
+            MalfunctionChanceDistortion = Plugin.config.Bind(
                 "Chances",
-                "MalfunctionDistortionChance",
+                "MalfunctionChanceDistortion",
                 5.0,
                 new ConfigDescription(
-                    "(Currently not implemented) Set the chance of the distortion malfunction happening - this will cause the map and terminal displays as well as walkies to become unusable either at landing or after a random interval into the match",
+                    "Set the chance of the distortion malfunction happening - this will cause the map and terminal displays as well as walkies to become unusable either at landing or after a random interval into the match",
                     new AcceptableValueRange<double>(0, 100)
                 )
             );
 
-            MalfunctionDoorChance = Plugin.config.Bind(
+            MalfunctionChanceDoor = Plugin.config.Bind(
                 "Chances",
-                "MalfunctionDoorChance",
-                5.0,
+                "MalfunctionChanceDoor",
+                3.0,
                 new ConfigDescription(
                     "Set the chance of the door malfunction happening - this will disable ship door controls either at landing or after a random interval into the match",
                     new AcceptableValueRange<double>(0, 100)
                 )
             );
 
-            MalfunctionPowerChance = Plugin.config.Bind(
+            MalfunctionChancePower = Plugin.config.Bind(
                 "Chances",
-                "MalfunctionPowerChance",
-                2.5,
+                "MalfunctionChancePower",
+                1.5,
                 new ConfigDescription(
                     "Set the chance of the power malfunction happening - this will make the entire ship to go dark after landing, disabling battery charging, door controls, terminal and map displays",
                     new AcceptableValueRange<double>(0, 100)
+                )
+            );
+
+            MalfunctionPassedDaysNavigation = Plugin.config.Bind(
+                "Passed Days",
+                "MalfunctionPassedDaysNavigation",
+                4,
+                new ConfigDescription(
+                    "Set how many days must have passed for the navigation malfunction to enable"
+                )
+            );
+
+            MalfunctionPassedDaysTeleporter = Plugin.config.Bind(
+                "Passed Days",
+                "MalfunctionPassedDaysTeleporter",
+                12,
+                new ConfigDescription(
+                    "Set how many days must have passed for the teleporter malfunction to enable"
+                )
+            );
+
+            MalfunctionPassedDaysDistortion = Plugin.config.Bind(
+                "Passed Days",
+                "MalfunctionPassedDaysDistortion",
+                4,
+                new ConfigDescription(
+                    "Set how many days must have passed for the distortion malfunction to enable"
+                )
+            );
+
+            MalfunctionPassedDaysDoor = Plugin.config.Bind(
+                "Passed Days",
+                "MalfunctionPassedDaysDoor",
+                8,
+                new ConfigDescription(
+                    "Set how many days must have passed for the door malfunction to enable"
+                )
+            );
+
+            MalfunctionPassedDaysPower = Plugin.config.Bind(
+                "Passed Days",
+                "MalfunctionPassedDaysPower",
+                12,
+                new ConfigDescription(
+                    "Set how many days must have passed for the power malfunction to enable"
                 )
             );
 
@@ -76,6 +126,15 @@ namespace Malfunctions
                 true,
                 new ConfigDescription(
                     "Enable the penalty system that increases malfunction chances after not recovering a player"
+                )
+            );
+
+            MalfunctionPenaltyOnly = Plugin.config.Bind(
+                "Penalty",
+                "MalfunctionPenaltyOnly",
+                false,
+                new ConfigDescription(
+                    "Only enable malfunctions when a player has not been recovered"
                 )
             );
 

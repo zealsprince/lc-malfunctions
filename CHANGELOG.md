@@ -1,6 +1,13 @@
 
 # Changelog #
 
+## 1.5.0 ##
+
+- Implement #12: Disable outdoor floodlights during power malfunction as per 
+- Add penalty only option meaning malfunctions only happen when players are not recovered
+- Add functionality to lock malfunctions behind a certain amount of elapsed days
+- Tweak probabilities further
+
 ## 1.4.1 ##
 
 - Fix #10: sparks were playing sound without spacialization meaning they could be heard everywhere

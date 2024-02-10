@@ -11,6 +11,15 @@ namespace Malfunctions.Patches
     {
         // Store objects which we search for by name and can't retrieve once inactive.
         private static GameObject elevatorPanelScreen;
+
+        // Store the floodlight objects as their parent gets disabled.
+        private static GameObject floodlight1;
+        private static GameObject floodlight2;
+
+        // Get the floodlight material since we'll overwrite it and then reset it.
+        private static Material floodlightMaterial;
+
+        // Store the state of unrecovered players since it's required in multiple states.
         private static bool hadUnrecoveredDeadPlayers;
 
         // Check if there were any dead players. Required for the malfunction penalty.
@@ -62,60 +71,77 @@ namespace Malfunctions.Patches
 
             // Penalty multiplier if a body wasn't recovered.
             double multiplier = 1;
-            if (Config.MalfunctionPenaltyEnabled.Value && hadUnrecoveredDeadPlayers == true)
+            if (Config.MalfunctionPenaltyEnabled.Value)
             {
-                multiplier = Config.MalfunctionPenaltyMultiplier.Value;
-
                 Plugin.logger.LogDebug(
-                    "Had unrecovered players. Increasing malfunction multiplier for this round."
+                    "Penalty multiplier active. Checking for unrecovered players."
                 );
+
+                if (hadUnrecoveredDeadPlayers == true)
+                {
+                    multiplier = Config.MalfunctionPenaltyMultiplier.Value;
+
+                    Plugin.logger.LogDebug(
+                        "Had unrecovered players. Increasing malfunction multiplier for this round."
+                    );
+                }
+                else if (Config.MalfunctionPenaltyOnly.Value)
+                {
+                    multiplier = 0;
+
+                    Plugin.logger.LogDebug(
+                        "No unrecovered players. Setting probability to zero as penalty mode only is enabled."
+                    );
+                }
             }
 
             // Check our rolls.
             bool malfunctionNavigationRollSucceeded =
-                Config.MalfunctionNavigationChance.Value != 0
+                Config.MalfunctionChanceNavigation.Value != 0
                 && malfunctionNavigationRoll
-                    < Config.MalfunctionNavigationChance.Value * multiplier;
+                    < Config.MalfunctionChanceNavigation.Value * multiplier;
 
             bool malfunctionTeleporterRollSucceeded =
-                Config.MalfunctionTeleporterChance.Value != 0
+                Config.MalfunctionChanceTeleporter.Value != 0
                 && malfunctionTeleporterRoll
-                    < Config.MalfunctionTeleporterChance.Value * multiplier;
+                    < Config.MalfunctionChanceTeleporter.Value * multiplier;
 
             bool malfunctionDistortionRollSucceeded =
-                Config.MalfunctionDistortionChance.Value != 0
+                Config.MalfunctionChanceDistortion.Value != 0
                 && malfunctionDistortionRoll
-                    < Config.MalfunctionDistortionChance.Value * multiplier;
+                    < Config.MalfunctionChanceDistortion.Value * multiplier;
 
             bool malfunctionDoorRollSucceeded =
-                Config.MalfunctionDoorChance.Value != 0
-                && malfunctionDoorRoll < Config.MalfunctionDoorChance.Value * multiplier;
+                Config.MalfunctionChanceDoor.Value != 0
+                && malfunctionDoorRoll < Config.MalfunctionChanceDoor.Value * multiplier;
 
             bool malfunctionPowerRollSucceeded =
-                Config.MalfunctionPowerChance.Value != 0
-                && malfunctionPowerRoll < Config.MalfunctionPowerChance.Value * multiplier;
+                Config.MalfunctionChancePower.Value != 0
+                && malfunctionPowerRoll < Config.MalfunctionChancePower.Value * multiplier;
 
             Plugin.logger.LogDebug(
-                $"Malfunction Navigation Roll: {malfunctionNavigationRoll} < {Config.MalfunctionNavigationChance.Value * multiplier} ({(malfunctionNavigationRollSucceeded ? "SUCCESS" : "FAIL")})"
+                $"Malfunction Navigation Roll: {malfunctionNavigationRoll} < {Config.MalfunctionChanceNavigation.Value * multiplier} ({(malfunctionNavigationRollSucceeded ? "SUCCESS" : "FAIL")})"
             );
 
             Plugin.logger.LogDebug(
-                $"Malfunction Teleporter Roll: {malfunctionTeleporterRoll} < {Config.MalfunctionTeleporterChance.Value * multiplier} ({(malfunctionTeleporterRollSucceeded ? "SUCCESS" : "FAIL")})"
+                $"Malfunction Teleporter Roll: {malfunctionTeleporterRoll} < {Config.MalfunctionChanceTeleporter.Value * multiplier} ({(malfunctionTeleporterRollSucceeded ? "SUCCESS" : "FAIL")})"
             );
 
             Plugin.logger.LogDebug(
-                $"Malfunction Distortion Roll: {malfunctionDistortionRoll} < {Config.MalfunctionDistortionChance.Value * multiplier} ({(malfunctionDistortionRollSucceeded ? "SUCCESS" : "FAIL")})"
+                $"Malfunction Distortion Roll: {malfunctionDistortionRoll} < {Config.MalfunctionChanceDistortion.Value * multiplier} ({(malfunctionDistortionRollSucceeded ? "SUCCESS" : "FAIL")})"
             );
 
             Plugin.logger.LogDebug(
-                $"Malfunction Power Roll: {malfunctionDoorRoll} < {Config.MalfunctionDoorChance.Value * multiplier} ({(malfunctionDoorRollSucceeded ? "SUCCESS" : "FAIL")})"
+                $"Malfunction Door Roll: {malfunctionDoorRoll} < {Config.MalfunctionChanceDoor.Value * multiplier} ({(malfunctionDoorRollSucceeded ? "SUCCESS" : "FAIL")})"
             );
 
             Plugin.logger.LogDebug(
-                $"Malfunction Power Roll: {malfunctionPowerRoll} < {Config.MalfunctionPowerChance.Value * multiplier} ({(malfunctionPowerRollSucceeded ? "SUCCESS" : "FAIL")})"
+                $"Malfunction Power Roll: {malfunctionPowerRoll} < {Config.MalfunctionChancePower.Value * multiplier} ({(malfunctionPowerRollSucceeded ? "SUCCESS" : "FAIL")})"
             );
 
-            // Plugin.logger.LogDebug($"Days left: {TimeOfDay.Instance.daysUntilDeadline}");
+            Plugin.logger.LogDebug(
+                $"Elapsed days: {__instance.gameStats.daysSpent} / Days to next deadline: {TimeOfDay.Instance.daysUntilDeadline}"
+            );
 
             #endregion
 
@@ -132,6 +158,7 @@ namespace Malfunctions.Patches
                 if (
                     __instance.currentLevel.name != "CompanyBuildingLevel"
                     && TimeOfDay.Instance.daysUntilDeadline >= 2
+                    && __instance.gameStats.daysSpent > Config.MalfunctionPassedDaysNavigation.Value
                 )
                 {
                     if (malfunctionNavigationRollSucceeded)
@@ -180,6 +207,7 @@ namespace Malfunctions.Patches
                 if (
                     __instance.currentLevel.name != "CompanyBuildingLevel"
                     && TimeOfDay.Instance.daysUntilDeadline >= 2
+                    && __instance.gameStats.daysSpent > Config.MalfunctionPassedDaysTeleporter.Value
                 )
                 {
                     if (malfunctionTeleporterRollSucceeded)
@@ -229,6 +257,7 @@ namespace Malfunctions.Patches
                 if (
                     __instance.currentLevel.name != "CompanyBuildingLevel"
                     && TimeOfDay.Instance.daysUntilDeadline >= 2
+                    && __instance.gameStats.daysSpent > Config.MalfunctionPassedDaysDistortion.Value
                 )
                 {
                     if (malfunctionDistortionRollSucceeded)
@@ -279,12 +308,13 @@ namespace Malfunctions.Patches
                 if (
                     __instance.currentLevel.name != "CompanyBuildingLevel"
                     && TimeOfDay.Instance.daysUntilDeadline >= 2
+                    && __instance.gameStats.daysSpent > Config.MalfunctionPassedDaysDoor.Value
                 )
                 {
                     if (malfunctionDoorRollSucceeded)
                     {
                         // Make sure we capture the door panel for later.
-                        elevatorPanelScreen = UnityEngine.GameObject.Find("ElevatorPanelScreen");
+                        elevatorPanelScreen = GameObject.Find("ElevatorPanelScreen");
 
                         // Set the door hour delay.
                         State.MalfunctionDoor.Delay = 4 + rand.Next(8);
@@ -306,6 +336,42 @@ namespace Malfunctions.Patches
             if (State.MalfunctionPower.Active || TimeOfDay.Instance.daysUntilDeadline < 2)
             {
                 State.MalfunctionPower.Reset();
+
+                // If the floodlights were captured, restore them.
+                if (floodlight1 != null && floodlight2 != null)
+                {
+                    // Double defintion...
+                    Light[] floodlight1Lights = floodlight1.GetComponentsInChildren<Light>(true);
+                    Light[] floodlight2Lights = floodlight2.GetComponentsInChildren<Light>(true);
+
+                    // Double for loop...
+                    foreach (Light light in floodlight1Lights)
+                    {
+                        light.enabled = true;
+                    }
+
+                    foreach (Light light in floodlight2Lights)
+                    {
+                        light.enabled = true;
+                    }
+
+                    // Double mesh...
+                    MeshRenderer floodlight1Mesh = floodlight1.GetComponent<MeshRenderer>();
+                    MeshRenderer floodlight2Mesh = floodlight2.GetComponent<MeshRenderer>();
+
+                    if (floodlight1Mesh != null && floodlight2Mesh != null)
+                    {
+                        // Capture the materials.
+                        Material[] materials = floodlight1Mesh.materials;
+
+                        // Swap back the material
+                        materials[2] = floodlightMaterial;
+
+                        // Re-assign the materials.
+                        floodlight1Mesh.materials = materials;
+                        floodlight2Mesh.materials = materials;
+                    }
+                }
 
                 // Restore terminal functionality.
                 Terminal terminal = UnityEngine.Object.FindObjectOfType<Terminal>();
@@ -338,17 +404,23 @@ namespace Malfunctions.Patches
                 if (
                     __instance.currentLevel.name != "CompanyBuildingLevel"
                     && TimeOfDay.Instance.daysUntilDeadline >= 2
+                    && __instance.gameStats.daysSpent > Config.MalfunctionPassedDaysPower.Value
                 )
                 {
                     if (malfunctionPowerRollSucceeded)
                     {
+                        // Make sure we capture the door panel for later.
+                        elevatorPanelScreen = GameObject.Find("ElevatorPanelScreen");
+
                         State.MalfunctionPower.Active = true;
 
+                        // Calculate an additional roll for the lever to be broken.
                         double blockLeverRoll = rand.NextDouble() * 100;
                         bool blockLeverSucceeded =
                             Config.MalfunctionPowerBlockLeverChance.Value != 0
                             && blockLeverRoll < Config.MalfunctionPowerBlockLeverChance.Value;
 
+                        // The delay value here represents whether or not the lever is blocked.
                         if (Config.MalfunctionPowerBlockLever.Value && blockLeverSucceeded)
                         {
                             State.MalfunctionPower.Delay = 1;
@@ -440,14 +512,52 @@ namespace Malfunctions.Patches
 
                 if (!State.MalfunctionPower.Notified)
                 {
+                    if (floodlight1 != null && floodlight2 != null)
+                    {
+                        // Double defintion...
+                        Light[] floodlight1Lights = floodlight1.GetComponentsInChildren<Light>(
+                            true
+                        );
+                        Light[] floodlight2Lights = floodlight2.GetComponentsInChildren<Light>(
+                            true
+                        );
+
+                        // Double for loop...
+                        foreach (Light light in floodlight1Lights)
+                        {
+                            light.enabled = false;
+                        }
+
+                        foreach (Light light in floodlight2Lights)
+                        {
+                            light.enabled = false;
+                        }
+
+                        // Double mesh...
+                        MeshRenderer floodlight1Mesh = floodlight1.GetComponent<MeshRenderer>();
+                        MeshRenderer floodlight2Mesh = floodlight2.GetComponent<MeshRenderer>();
+
+                        if (floodlight1Mesh != null && floodlight2Mesh != null)
+                        {
+                            // Capture the materials.
+                            Material[] materials = floodlight1Mesh.materials;
+
+                            // Swap the material
+                            materials[2] = floodlight1Mesh.materials[0];
+
+                            // Re-assign the materials.
+                            floodlight1Mesh.materials = materials;
+                            floodlight2Mesh.materials = materials;
+                        }
+                    }
+
                     Terminal terminal = UnityEngine.Object.FindObjectOfType<Terminal>();
                     if (terminal != null)
                     {
                         terminal.terminalTrigger.interactable = false;
                     }
 
-                    // Remove the lights from the door controls. Also assign to a variable so we can restore it later.
-                    elevatorPanelScreen = UnityEngine.GameObject.Find("ElevatorPanelScreen");
+                    // Remove the lights from the door controls.
                     elevatorPanelScreen?.SetActive(false);
 
                     // Disable the button control triggers.
@@ -488,6 +598,34 @@ namespace Malfunctions.Patches
 
                     // We just notified the player this malfunction is active. Make sure we flag ourselves that way.
                     State.MalfunctionPower.Notified = true;
+                }
+            }
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("OnShipLandedMiscEvents")]
+        private static void CaptureFloodlights()
+        {
+            if (floodlightMaterial == null)
+            {
+                // Capture the floodlights while they are active.
+                floodlight1 = GameObject.Find("Floodlight1");
+                floodlight2 = GameObject.Find("Floodlight2");
+
+                if (floodlight1 == null || floodlight2 == null)
+                {
+                    Plugin.logger.LogWarning("Failed to capture floodlight gameobjects!");
+                }
+                else
+                {
+                    MeshRenderer floodlight1Mesh = floodlight1.GetComponent<MeshRenderer>();
+
+                    if (floodlight1Mesh != null)
+                    {
+                        // Set the material.
+                        floodlightMaterial = floodlight1Mesh.materials[2];
+                    }
+                    else { }
                 }
             }
         }
