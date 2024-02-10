@@ -1,6 +1,10 @@
 
 # Changelog #
 
+## 1.5.2 ##
+
+- Attempt to fix desync due to penalty calculating different amounts of bodies in the ship
+
 ## 1.5.1 ##
 
 - Reduce elapsed days defaults by one day

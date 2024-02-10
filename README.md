@@ -1,5 +1,5 @@
 
-<img src="https://img.shields.io/badge/version-1.5.1-0AF" /></a>
+<img src="https://img.shields.io/badge/version-1.5.2-0AF" /></a>
 <img src="https://img.shields.io/badge/lc--version-v49-000" /></a>
 
 # Malfunctions #

@@ -25,17 +25,18 @@ namespace Malfunctions.Patches
         // Check if there were any dead players. Required for the malfunction penalty.
         [HarmonyPostfix]
         [HarmonyPatch("EndOfGame")]
-        private static void CheckDeadPlayers(StartOfRound __instance)
+        private static void CheckDeadPlayers()
         {
-            int deadPlayers = 1 + __instance.connectedPlayersAmount - __instance.livingPlayers;
+            DeadBodyInfo[] bodies = UnityEngine.Object.FindObjectsOfType<DeadBodyInfo>();
 
-            if (__instance.GetBodiesInShip() < deadPlayers)
+            hadUnrecoveredDeadPlayers = false;
+            foreach (DeadBodyInfo body in bodies)
             {
-                hadUnrecoveredDeadPlayers = true;
-            }
-            else
-            {
-                hadUnrecoveredDeadPlayers = false;
+                if (!body.isInShip)
+                {
+                    hadUnrecoveredDeadPlayers = true;
+                    break;
+                }
             }
         }
 
