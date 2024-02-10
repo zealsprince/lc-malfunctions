@@ -1,6 +1,10 @@
 
 # Changelog #
 
+## 1.5.1 ##
+
+- Reduce elapsed days defaults by one day
+
 ## 1.5.0 ##
 
 - Implement #12: Disable outdoor floodlights during power malfunction as per 

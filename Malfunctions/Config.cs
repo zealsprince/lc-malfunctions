@@ -78,7 +78,7 @@ namespace Malfunctions
             MalfunctionPassedDaysNavigation = Plugin.config.Bind(
                 "Passed Days",
                 "MalfunctionPassedDaysNavigation",
-                4,
+                3,
                 new ConfigDescription(
                     "Set how many days must have passed for the navigation malfunction to enable"
                 )
@@ -87,7 +87,7 @@ namespace Malfunctions
             MalfunctionPassedDaysTeleporter = Plugin.config.Bind(
                 "Passed Days",
                 "MalfunctionPassedDaysTeleporter",
-                12,
+                11,
                 new ConfigDescription(
                     "Set how many days must have passed for the teleporter malfunction to enable"
                 )
@@ -96,7 +96,7 @@ namespace Malfunctions
             MalfunctionPassedDaysDistortion = Plugin.config.Bind(
                 "Passed Days",
                 "MalfunctionPassedDaysDistortion",
-                4,
+                3,
                 new ConfigDescription(
                     "Set how many days must have passed for the distortion malfunction to enable"
                 )
@@ -105,7 +105,7 @@ namespace Malfunctions
             MalfunctionPassedDaysDoor = Plugin.config.Bind(
                 "Passed Days",
                 "MalfunctionPassedDaysDoor",
-                8,
+                7,
                 new ConfigDescription(
                     "Set how many days must have passed for the door malfunction to enable"
                 )
@@ -114,7 +114,7 @@ namespace Malfunctions
             MalfunctionPassedDaysPower = Plugin.config.Bind(
                 "Passed Days",
                 "MalfunctionPassedDaysPower",
-                12,
+                11,
                 new ConfigDescription(
                     "Set how many days must have passed for the power malfunction to enable"
                 )
