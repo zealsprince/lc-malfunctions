@@ -1,6 +1,10 @@
 
 # Changelog #
 
+## 1.5.3 ##
+
+- Fix #15: penalty desync by changing the order of operations and relying on the base game penalty calculation
+
 ## 1.5.2 ##
 
 - Attempt to fix desync due to penalty calculating different amounts of bodies in the ship

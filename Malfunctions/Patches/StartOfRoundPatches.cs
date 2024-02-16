@@ -23,20 +23,30 @@ namespace Malfunctions.Patches
         private static bool hadUnrecoveredDeadPlayers;
 
         // Check if there were any dead players. Required for the malfunction penalty.
-        [HarmonyPostfix]
+        [HarmonyPrefix]
         [HarmonyPatch("EndOfGame")]
-        private static void CheckDeadPlayers()
+        private static void CheckDeadPlayers(StartOfRound __instance, int bodiesInsured)
         {
-            DeadBodyInfo[] bodies = UnityEngine.Object.FindObjectsOfType<DeadBodyInfo>();
+            // Previously this was done as a postfix to the EndOfGame function and relying on dead player bodies.
+            // I believe the desync would happen because for some players bodies were already cleaned up at that point.
 
-            hadUnrecoveredDeadPlayers = false;
-            foreach (DeadBodyInfo body in bodies)
+            // Perform the same calculation logic as the EndOfGame function receives and performs.
+            int playersDead = __instance.connectedPlayersAmount + 1 - __instance.livingPlayers;
+            if (playersDead > bodiesInsured)
             {
-                if (!body.isInShip)
-                {
-                    hadUnrecoveredDeadPlayers = true;
-                    break;
-                }
+                hadUnrecoveredDeadPlayers = true;
+
+                Plugin.logger.LogDebug(
+                    $"There were unrecovered players! (Players: {__instance.connectedPlayersAmount + 1} / Dead: {playersDead} / Recovered: {bodiesInsured})"
+                );
+            }
+            else
+            {
+                hadUnrecoveredDeadPlayers = false;
+
+                Plugin.logger.LogDebug(
+                    $"All players are alive or recovered! (Players: {__instance.connectedPlayersAmount + 1} / Dead: {playersDead} / Recovered: {bodiesInsured})"
+                );
             }
         }
 
