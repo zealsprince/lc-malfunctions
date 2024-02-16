@@ -1,6 +1,10 @@
 
 # Changelog #
 
+## 1.5.5 ##
+
+- Update plugin version identifier
+
 ## 1.5.4 ##
 
 - Update README.md with new penalty and passed days mechanics
