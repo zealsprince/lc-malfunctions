@@ -1,5 +1,5 @@
 
-<img src="https://img.shields.io/badge/version-1.5.3-0AF" /></a>
+<img src="https://img.shields.io/badge/version-1.5.4-0AF" /></a>
 <img src="https://img.shields.io/badge/lc--version-v49-000" /></a>
 
 # Malfunctions #
@@ -42,6 +42,50 @@ This is the worst type of malfunction.
 
 To add onto that, no warning is given with this malfunction. The only solution to restore power is to use the remainder to launch back into orbit, possibly only through the autopilot reserves.
 
+## Mechanics ##
+
+Though the chance of malfunctions occurring is completely random, there are a few parameters that influence when they occur:
+
+### Chances & Penalty ###
+
+*The company likes its employees in one piece and while it does maintain your ship, incurring extra casualties is certainly removing it from that maintenance budget.*
+
+In general the idea for malfunctions was that over the course of 2 in game weeks of each 4 days, there is about a 25% chance of a malfunction being encountered by default statistically speaking. This percentage has changed with the amount of additional malfunction mechanics I have added to this mod and as such overall default chances have been adjusted accordingly.
+
+There is no weighted system in place meaning they are fully random. Due to it being pure randomness, you can have a run with back-to-back malfunctions. The likelihood of this happening are less than a percent though. Additionally, if a malfunction of a type was triggered it can not be triggered the next day.
+
+To make malfunctions feel less random at times and more as a punishing mechanic, a penalty mechanic was added: Not recovering bodies by default doubles the chance of a malfunction happening. This is why by default the chances of a malfunction happening are very low.
+
+**Keep in mind this is a bit of a spoiler if you're wanting to go in completely blind!**
+
+<details> 
+  <summary>Malfunction probabilities:</summary>
+
+- Navigation: 7.5%
+- Teleporter: 7.5%
+- Distortion: 5.0%
+- Door: 3.0%
+- Power: 1.5%
+</details>
+
+### Passed Days ###
+
+Each malfunction has a configuration parameter to gatekeep them from happening early on in runs and as such feeling overwhelming.
+
+**Once again, this might be a spoiler if you want to be surprised**
+
+<details> 
+  <summary>Malfunctions required passed days:</summary>
+
+- Navigation: 3 (Week 2)
+- Teleporter: 11 (Week 4)
+- Distortion: 3 (Week 2)
+- Door: 7 (Week 3)
+- Power: 11 (Week 4)
+</details>
+
 ## Suggestions ##
 
 Want to suggest new features or tweaks for this mod? Feel free to open up a suggestion issue on the GitHub repository!
+
+Furthermore there is an official mod release thread on the Lethal Company Modding Discord!

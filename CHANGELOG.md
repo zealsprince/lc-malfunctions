@@ -1,6 +1,10 @@
 
 # Changelog #
 
+## 1.5.4 ##
+
+- Update README.md with new penalty and passed days mechanics
+
 ## 1.5.3 ##
 
 - Fix #15: penalty desync by changing the order of operations and relying on the base game penalty calculation
