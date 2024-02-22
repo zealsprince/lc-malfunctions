@@ -1,6 +1,10 @@
 
 # Changelog #
 
+## 1.5.6 ##
+
+- Add banner image
+
 ## 1.5.5 ##
 
 - Update plugin version identifier

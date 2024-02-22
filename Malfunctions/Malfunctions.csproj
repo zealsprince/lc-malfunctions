@@ -232,7 +232,7 @@
     <Compile Include="Config.cs" />
     <Compile Include="Helpers\RandomHelper.cs" />
     <Compile Include="Malfunction.cs" />
-    <Compile Include="MonoBehaviors\Sparks.cs" />
+    <Compile Include="MonoBehaviours\Sparks.cs" />
     <Compile Include="Patches\HangarShipDoorPatches.cs" />
     <Compile Include="Patches\StartMatchLeverPatches.cs" />
     <Compile Include="Patches\WalkieTalkiePatches.cs" />
