@@ -156,10 +156,87 @@ namespace Malfunctions.Patches
 
             #endregion
 
+            #region Restore
+
+            // Restore terminal functionality.
+            Terminal terminal = UnityEngine.Object.FindObjectOfType<Terminal>();
+            if (terminal != null)
+            {
+                terminal.terminalTrigger.interactable = true;
+            }
+
+            // Restore the lights from the door controls.
+            elevatorPanelScreen?.SetActive(true);
+
+            // Restore door functionality.
+            GameObject hangarDoorButtonPanel = GameObject.Find("HangarDoorButtonPanel");
+            if (hangarDoorButtonPanel != null)
+            {
+                InteractTrigger[] triggers =
+                    hangarDoorButtonPanel.GetComponentsInChildren<InteractTrigger>(true);
+
+                foreach (InteractTrigger trigger in triggers)
+                {
+                    trigger.interactable = true;
+                }
+            }
+
+            // If the floodlights were captured, restore them.
+            if (floodlight1 != null && floodlight2 != null)
+            {
+                // Double defintion...
+                Light[] floodlight1Lights = floodlight1.GetComponentsInChildren<Light>(true);
+                Light[] floodlight2Lights = floodlight2.GetComponentsInChildren<Light>(true);
+
+                // Double for loop...
+                foreach (Light light in floodlight1Lights)
+                {
+                    light.enabled = true;
+                }
+
+                foreach (Light light in floodlight2Lights)
+                {
+                    light.enabled = true;
+                }
+
+                // Double mesh...
+                MeshRenderer floodlight1Mesh = floodlight1.GetComponent<MeshRenderer>();
+                MeshRenderer floodlight2Mesh = floodlight2.GetComponent<MeshRenderer>();
+
+                if (floodlight1Mesh != null && floodlight2Mesh != null)
+                {
+                    // Capture the materials.
+                    Material[] materials = floodlight1Mesh.materials;
+
+                    // Swap back the material
+                    materials[2] = floodlightMaterial;
+
+                    // Re-assign the materials.
+                    floodlight1Mesh.materials = materials;
+                    floodlight2Mesh.materials = materials;
+                }
+            }
+
+            // Reset all malfunctions if consecutive mode is enabled to allow triggering even if previously triggerd.
+            if (Config.MalfunctionMiscAllowConsecutive.Value)
+            {
+                State.MalfunctionNavigation.Reset();
+                State.MalfunctionTeleporter.Reset();
+                State.MalfunctionDistortion.Reset();
+                State.MalfunctionDoor.Reset();
+                State.MalfunctionPower.Reset();
+            }
+
+            #endregion
+
             #region Navigation
 
             // If we previously had a navigation malfunction make sure to reset it and any children.
-            if (State.MalfunctionNavigation.Active || TimeOfDay.Instance.daysUntilDeadline < 2)
+            if (
+                State.MalfunctionNavigation.Active
+                || TimeOfDay.Instance.daysUntilDeadline < 2
+                    && !Config.MalfunctionMiscAllowConsecutive.Value
+            )
             {
                 State.MalfunctionNavigation.Reset();
             }
@@ -253,13 +330,6 @@ namespace Malfunctions.Patches
             if (State.MalfunctionDistortion.Active || TimeOfDay.Instance.daysUntilDeadline < 2)
             {
                 State.MalfunctionDistortion.Reset();
-
-                // Restore terminal functionality.
-                Terminal terminal = UnityEngine.Object.FindObjectOfType<Terminal>();
-                if (terminal != null)
-                {
-                    terminal.terminalTrigger.interactable = true;
-                }
             }
             // Make sure we don't trigger this malfunction if the power one is in place.
             else if (!State.MalfunctionPower.Active)
@@ -293,24 +363,6 @@ namespace Malfunctions.Patches
             if (State.MalfunctionDoor.Active || TimeOfDay.Instance.daysUntilDeadline < 2)
             {
                 State.MalfunctionDoor.Reset();
-
-                // Restore the lights from the door controls.
-                elevatorPanelScreen?.SetActive(true);
-
-                // Restore door functionality.
-                GameObject hangarDoorButtonPanel = UnityEngine.GameObject.Find(
-                    "HangarDoorButtonPanel"
-                );
-                if (hangarDoorButtonPanel != null)
-                {
-                    InteractTrigger[] triggers =
-                        hangarDoorButtonPanel.GetComponentsInChildren<InteractTrigger>(true);
-
-                    foreach (InteractTrigger trigger in triggers)
-                    {
-                        trigger.interactable = true;
-                    }
-                }
             }
             // Make sure we don't trigger this malfunction if the power one is in place.
             else if (!State.MalfunctionPower.Active)
@@ -347,67 +399,6 @@ namespace Malfunctions.Patches
             if (State.MalfunctionPower.Active || TimeOfDay.Instance.daysUntilDeadline < 2)
             {
                 State.MalfunctionPower.Reset();
-
-                // If the floodlights were captured, restore them.
-                if (floodlight1 != null && floodlight2 != null)
-                {
-                    // Double defintion...
-                    Light[] floodlight1Lights = floodlight1.GetComponentsInChildren<Light>(true);
-                    Light[] floodlight2Lights = floodlight2.GetComponentsInChildren<Light>(true);
-
-                    // Double for loop...
-                    foreach (Light light in floodlight1Lights)
-                    {
-                        light.enabled = true;
-                    }
-
-                    foreach (Light light in floodlight2Lights)
-                    {
-                        light.enabled = true;
-                    }
-
-                    // Double mesh...
-                    MeshRenderer floodlight1Mesh = floodlight1.GetComponent<MeshRenderer>();
-                    MeshRenderer floodlight2Mesh = floodlight2.GetComponent<MeshRenderer>();
-
-                    if (floodlight1Mesh != null && floodlight2Mesh != null)
-                    {
-                        // Capture the materials.
-                        Material[] materials = floodlight1Mesh.materials;
-
-                        // Swap back the material
-                        materials[2] = floodlightMaterial;
-
-                        // Re-assign the materials.
-                        floodlight1Mesh.materials = materials;
-                        floodlight2Mesh.materials = materials;
-                    }
-                }
-
-                // Restore terminal functionality.
-                Terminal terminal = UnityEngine.Object.FindObjectOfType<Terminal>();
-                if (terminal != null)
-                {
-                    terminal.terminalTrigger.interactable = true;
-                }
-
-                // Restore the lights from the door controls.
-                elevatorPanelScreen?.SetActive(true);
-
-                // Restore door functionality.
-                GameObject hangarDoorButtonPanel = UnityEngine.GameObject.Find(
-                    "HangarDoorButtonPanel"
-                );
-                if (hangarDoorButtonPanel != null)
-                {
-                    InteractTrigger[] triggers =
-                        hangarDoorButtonPanel.GetComponentsInChildren<InteractTrigger>(true);
-
-                    foreach (InteractTrigger trigger in triggers)
-                    {
-                        trigger.interactable = true;
-                    }
-                }
             }
             else
             {
@@ -454,7 +445,7 @@ namespace Malfunctions.Patches
         // Update the navigation moon info screen with relevant information.
         [HarmonyPostfix]
         [HarmonyPatch("SetMapScreenInfoToCurrentLevel")]
-        [HarmonyAfter(new string[] { "jamil.corporate_restructure" })]
+        [HarmonyAfter(new string[] { "jamil.corporate_restructure", "WeatherTweaks" })]
         private static void OverwriteMapScreenInfo(StartOfRound __instance)
         {
             // Make sure to only show the Malfunction notification if it's active, we're not on the company

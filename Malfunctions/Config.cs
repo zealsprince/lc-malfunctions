@@ -23,6 +23,8 @@ namespace Malfunctions
         public static ConfigEntry<bool> MalfunctionPowerBlockLever;
         public static ConfigEntry<double> MalfunctionPowerBlockLeverChance;
 
+        public static ConfigEntry<bool> MalfunctionMiscAllowConsecutive;
+
         public static void Load()
         {
             MalfunctionChanceNavigation = Plugin.config.Bind(
@@ -174,6 +176,15 @@ namespace Malfunctions
                 new ConfigDescription(
                     "Chance that pulling the lever will not cause take-off",
                     new AcceptableValueRange<double>(0, 100)
+                )
+            );
+
+            MalfunctionMiscAllowConsecutive = Plugin.config.Bind(
+                "Mmiscellaneous",
+                "MalfunctionMiscAllowConsecutive",
+                false,
+                new ConfigDescription(
+                    "Allow malfunctions to trigger consecutively - by default if a malfunction is triggered it can not repeat the next day"
                 )
             );
         }

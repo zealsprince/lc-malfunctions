@@ -1,6 +1,11 @@
 
 # Changelog #
 
+## 1.6.0 ##
+
+- Add support for WeatherTweaks
+- Add config option to allow consecutive malfunctions of the same type
+
 ## 1.5.6 ##
 
 - Add banner image
