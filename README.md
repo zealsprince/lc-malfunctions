@@ -1,5 +1,5 @@
 
-<img src="https://img.shields.io/badge/version-1.7.0-0AF" /></a>
+<img src="https://img.shields.io/badge/version-1.7.1-0AF" /></a>
 <img src="https://img.shields.io/badge/lc--version-v49-000" /></a>
 
 ![banner](https://github.com/zealsprince/lc-malfunctions/assets/1859270/f2d781e8-2b79-4d80-9e49-d688cc7b99f2)
@@ -29,12 +29,6 @@ It has a high chance of happening moments after landing but can also happen over
 This malfunction causes the communication and map systems to fail during an expedition. Teleporters are still functional but target players at random. Use with caution.
 
 Ship terminal and map displays are either disabled immediately or after a random interval. Walkie talkies lose functionality as well. A warning after triggering is given to all players. 
-
-### Crackdown Protocol / Door Malfunction ###
-
-This malfunction causes the ship to go into a lockdown, causing the door to remain closed until 10pm. The door controls are disabled as well.
-
-The malfunction triggers randomly over the course of a day if it's active. A warning after triggering is given to all players.
 
 ### Crackdown Protocol / Door Malfunction ###
 

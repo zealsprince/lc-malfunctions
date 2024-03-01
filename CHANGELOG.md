@@ -1,6 +1,10 @@
 
 # Changelog #
 
+## 1.7.1 ##
+
+- Fix README.md containing two sections for the door malfunction
+
 ## 1.7.0 ##
 
 - Add network syncing to make sure no desyncs happen due to penalty mechanic
