@@ -8,6 +8,7 @@ namespace Malfunctions
     {
         public bool Active;
         public bool Notified;
+        public bool RollSucceeded;
 
         protected List<GameObject> effects;
 
@@ -15,6 +16,7 @@ namespace Malfunctions
         {
             Active = false;
             Notified = false;
+            RollSucceeded = false;
 
             effects = new List<GameObject>();
         }

@@ -1,6 +1,12 @@
 
 # Changelog #
 
+## 1.7.0 ##
+
+- Add network syncing to make sure no desyncs happen due to penalty mechanic
+- Add lever malfunction that will block take-off after a designated time until autopilot
+- Decouple reliance on matched configuration files using host as source of truth
+
 ## 1.6.0 ##
 
 - Add support for WeatherTweaks

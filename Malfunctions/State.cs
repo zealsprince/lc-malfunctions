@@ -7,6 +7,7 @@
         public static MalfunctionWithDelay MalfunctionTeleporter;
         public static MalfunctionWithDelay MalfunctionDistortion;
         public static MalfunctionWithDelay MalfunctionDoor;
+        public static MalfunctionWithDelay MalfunctionLever;
         public static MalfunctionWithDelay MalfunctionPower;
 
         public static void Load()
@@ -15,6 +16,7 @@
             MalfunctionTeleporter = new MalfunctionWithDelay();
             MalfunctionDistortion = new MalfunctionWithDelay();
             MalfunctionDoor = new MalfunctionWithDelay();
+            MalfunctionLever = new MalfunctionWithDelay();
             MalfunctionPower = new MalfunctionWithDelay();
         }
 
@@ -25,6 +27,7 @@
             MalfunctionTeleporter.Reset();
             MalfunctionDistortion.Reset();
             MalfunctionDoor.Reset();
+            MalfunctionLever.Reset();
             MalfunctionPower.Reset();
         }
     }

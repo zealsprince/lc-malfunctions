@@ -8,12 +8,14 @@ namespace Malfunctions
         public static ConfigEntry<double> MalfunctionChanceTeleporter;
         public static ConfigEntry<double> MalfunctionChanceDistortion;
         public static ConfigEntry<double> MalfunctionChanceDoor;
+        public static ConfigEntry<double> MalfunctionChanceLever;
         public static ConfigEntry<double> MalfunctionChancePower;
 
         public static ConfigEntry<int> MalfunctionPassedDaysNavigation;
         public static ConfigEntry<int> MalfunctionPassedDaysTeleporter;
         public static ConfigEntry<int> MalfunctionPassedDaysDistortion;
         public static ConfigEntry<int> MalfunctionPassedDaysDoor;
+        public static ConfigEntry<int> MalfunctionPassedDaysLever;
         public static ConfigEntry<int> MalfunctionPassedDaysPower;
 
         public static ConfigEntry<bool> MalfunctionPenaltyEnabled;
@@ -67,6 +69,16 @@ namespace Malfunctions
                 )
             );
 
+            MalfunctionChanceLever = Plugin.config.Bind(
+                "Chances",
+                "MalfunctionChanceLever",
+                3.0,
+                new ConfigDescription(
+                    "Set the chance of the lever malfunction happening - this will disable ship lever after a random but announced delay",
+                    new AcceptableValueRange<double>(0, 100)
+                )
+            );
+
             MalfunctionChancePower = Plugin.config.Bind(
                 "Chances",
                 "MalfunctionChancePower",
@@ -110,6 +122,15 @@ namespace Malfunctions
                 7,
                 new ConfigDescription(
                     "Set how many days must have passed for the door malfunction to enable"
+                )
+            );
+
+            MalfunctionPassedDaysLever = Plugin.config.Bind(
+                "Passed Days",
+                "MalfunctionPassedDaysLever",
+                0,
+                new ConfigDescription(
+                    "Set how many days must have passed for the lever malfunction to enable"
                 )
             );
 

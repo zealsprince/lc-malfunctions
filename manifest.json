@@ -1,9 +1,10 @@
 {
   "name": "Malfunctions",
-  "version_number": "1.6.0",
+  "version_number": "1.7.0",
   "website_url": "https://github.com/zealsprince/lc-malfunctions",
   "description": "Adds random malfunctions to the ship and intends to improve the core game loop with interesting new events.",
   "dependencies": [
-    "BepInEx-BepInExPack-5.4.2100"
+    "BepInEx-BepInExPack-5.4.2100",
+    "2018-LC_API-3.4.5"
   ]
 }

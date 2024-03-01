@@ -36,7 +36,6 @@ namespace Malfunctions.Patches
 
                     if (!State.MalfunctionTeleporter.Notified)
                     {
-                        // TODO: Swap this out with a custom HUD animation prefab similar to the radation one.
                         HUDManager.Instance.globalNotificationText.text =
                             "SHIP TELEPORTER MALFUNCTION:\nTIMEOUT FROM ATOMIC MISALIGNMENT";
 
@@ -101,7 +100,6 @@ namespace Malfunctions.Patches
 
                     if (!State.MalfunctionDistortion.Notified)
                     {
-                        // TODO: Swap this out with a custom HUD animation prefab similar to the radation one.
                         HUDManager.Instance.globalNotificationText.text =
                             "SHIP COMS DISTURBANCE:\nELECTROMAGNETIC ANOMALY";
 
@@ -156,7 +154,7 @@ namespace Malfunctions.Patches
                 && !State.MalfunctionDoor.Triggered
             )
             {
-                // If the total  time is past our delay, trigger the teleporter timeout. Don't trigger after 10pm if reset.
+                // If the total  time is past our delay, trigger the door timeout. Don't trigger after 10pm if reset.
                 if (
                     __instance.currentDayTimeStarted
                     && __instance.hour >= 1 + State.MalfunctionDoor.Delay
@@ -169,7 +167,6 @@ namespace Malfunctions.Patches
 
                     if (!State.MalfunctionDoor.Notified)
                     {
-                        // TODO: Swap this out with a custom HUD animation prefab similar to the radation one.
                         HUDManager.Instance.globalNotificationText.text =
                             "SHIP DOOR LOCK FAIL:\nCRACKDOWN PROTOCOL ACTIVE";
 
@@ -262,6 +259,88 @@ namespace Malfunctions.Patches
                             trigger.interactable = true;
                         }
                     }
+                }
+            }
+        }
+
+        // Periodically check if the lever malfunction should be triggered.
+        [HarmonyPostfix]
+        [HarmonyPatch("Update")]
+        private static void CheckMalfunctionLeverTrigger(TimeOfDay __instance)
+        {
+            // Check if the lever malfunction is active and not triggered yet.
+            // Already disabled if the power malfunction is active.
+            if (
+                !State.MalfunctionPower.Active
+                && !State.MalfunctionDoor.Active
+                && State.MalfunctionLever.Active
+            )
+            {
+                // If the total time is past our delay - 4, trigger the lever notification. Don't trigger after 10pm.
+                if (
+                    !State.MalfunctionLever.Notified
+                    && __instance.currentDayTimeStarted
+                    && __instance.hour >= 3 + State.MalfunctionLever.Delay
+                    && __instance.hour < 16
+                )
+                {
+                    Plugin.logger.LogDebug("Notified lever malfunction!");
+
+                    // Make sure we don't display 14pm etc.
+                    int value = State.MalfunctionLever.Delay;
+                    if (value == 0)
+                    {
+                        value = 12;
+                    }
+
+                    HUDManager.Instance.globalNotificationText.text =
+                        $"MANUAL HYDRAULICS FAILURE IMMINENT:\nLEAVE BEFORE {value}PM OR AWAIT AUTOPILOT";
+
+                    HUDManager.Instance.globalNotificationAnimator.SetTrigger("TriggerNotif");
+                    HUDManager.Instance.UIAudio.PlayOneShot(
+                        HUDManager.Instance.radiationWarningAudio,
+                        1f
+                    );
+
+                    // We just notified the player this malfunction is active. Make sure we flag ourselves that way.
+                    State.MalfunctionLever.Notified = true;
+                }
+                // If the total time is past our delay, trigger the lever timeout. Don't trigger after 10pm.
+                else if (
+                    !State.MalfunctionLever.Triggered
+                    && __instance.currentDayTimeStarted
+                    && __instance.hour >= 6 + State.MalfunctionLever.Delay
+                    && __instance.hour < 16
+                )
+                {
+                    Plugin.logger.LogDebug("Triggered lever malfunction!");
+
+                    State.MalfunctionLever.Triggered = true;
+
+                    // Change the lever disabled tooltip for all players.
+                    StartMatchLever leverDevice =
+                        UnityEngine.Object.FindObjectOfType<StartMatchLever>();
+
+                    if (leverDevice == null)
+                    {
+                        Plugin.logger.LogError("Failed to find lever device object.");
+
+                        return;
+                    }
+
+                    leverDevice.triggerScript.disabledHoverTip = "[The lever is jammed]";
+
+                    // Instantiate the new sparks object on top of the lever.
+                    GameObject sparks = Assets.SpawnPrefab(
+                        "sparks",
+                        leverDevice.transform.position
+                    );
+
+                    // Assign the sparks to the lever device so that they move together.
+                    sparks.transform.SetParent(leverDevice.transform, true);
+
+                    // Make sure it's tracked on the malfunction.
+                    State.MalfunctionLever.AssignChild(sparks);
                 }
             }
         }

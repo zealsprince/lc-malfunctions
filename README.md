@@ -1,5 +1,5 @@
 
-<img src="https://img.shields.io/badge/version-1.6.0-0AF" /></a>
+<img src="https://img.shields.io/badge/version-1.7.0-0AF" /></a>
 <img src="https://img.shields.io/badge/lc--version-v49-000" /></a>
 
 ![banner](https://github.com/zealsprince/lc-malfunctions/assets/1859270/f2d781e8-2b79-4d80-9e49-d688cc7b99f2)
@@ -36,6 +36,18 @@ This malfunction causes the ship to go into a lockdown, causing the door to rema
 
 The malfunction triggers randomly over the course of a day if it's active. A warning after triggering is given to all players.
 
+### Crackdown Protocol / Door Malfunction ###
+
+This malfunction causes the ship to go into a lockdown, causing the door to remain closed until 10pm. The door controls are disabled as well.
+
+The malfunction triggers randomly over the course of a day if it's active. A warning after triggering is given to all players.
+
+### Hydraulics Jam / Lever Malfunction ###
+
+This malfunction causes the ship to broadcast a message stating the manual hydraulics are about to fail, blocking the lever at a certain time until the autopilot takes off.
+
+The malfunction triggers randomly between 12pm and 4pm but gives players a 3 hour warning to decide whether they want to stay or take off before failure.
+
 ### Core Surge / Power Malfunction ###
 
 This malfunction causes the ship to lose power to all its primary systems. This means batteries can not be recharged, doors can't be closed, the map can't be used, players can't be teleported and the terminal remains disabled. Furthermore, there might not be enough energy left to take off with only the emergency autopilot being the last option.
@@ -67,6 +79,7 @@ To make malfunctions feel less random at times and more as a punishing mechanic,
 - Teleporter: 7.5%
 - Distortion: 5.0%
 - Door: 3.0%
+- Lever: 3.0%
 - Power: 1.5%
 </details>
 
@@ -83,6 +96,7 @@ Each malfunction has a configuration parameter to gatekeep them from happening e
 - Teleporter: 11 (Week 4)
 - Distortion: 3 (Week 2)
 - Door: 7 (Week 3)
+- Lever: 0 (Week 1)
 - Power: 11 (Week 4)
 </details>
 

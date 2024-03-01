@@ -14,7 +14,6 @@ namespace Malfunctions.Patches
             {
                 if (Config.MalfunctionPowerBlockLever.Value && State.MalfunctionPower.Delay != 0)
                 {
-                    // TODO: Swap this out with a custom HUD animation prefab similar to the radation one.
                     HUDManager.Instance.globalNotificationText.text =
                         "SHIP CORE DEPLETION:\nAWAIT 12AM EMERGENCY AUTOPILOT";
 
@@ -24,16 +23,21 @@ namespace Malfunctions.Patches
                         1f
                     );
 
-                    __instance.leverHasBeenPulled = false;
-                    __instance.triggerScript.interactable = true;
-
-                    __instance.leverAnimatorObject.SetBool(
-                        "pullLever",
-                        !__instance.leverHasBeenPulled
-                    );
-
                     return false;
                 }
+            }
+            else if (State.MalfunctionLever.Active && State.MalfunctionLever.Triggered)
+            {
+                HUDManager.Instance.globalNotificationText.text =
+                    "SHIP LEVER HYDRAULICS JAM:\nAWAIT 12AM EMERGENCY AUTOPILOT";
+
+                HUDManager.Instance.globalNotificationAnimator.SetTrigger("TriggerNotif");
+                HUDManager.Instance.UIAudio.PlayOneShot(
+                    HUDManager.Instance.radiationWarningAudio,
+                    1f
+                );
+
+                return false;
             }
 
             return true;

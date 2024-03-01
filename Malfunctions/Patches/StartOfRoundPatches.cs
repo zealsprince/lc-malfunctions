@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
 using HarmonyLib;
+using LC_API.Networking;
 using Malfunctions.Helpers;
 using UnityEngine;
+using static UnityEngine.Rendering.HighDefinition.ScalableSettingLevelParameter;
 
 namespace Malfunctions.Patches
 {
@@ -21,6 +23,175 @@ namespace Malfunctions.Patches
 
         // Store the state of unrecovered players since it's required in multiple states.
         private static bool hadUnrecoveredDeadPlayers;
+
+        private static string originalLeverDisableTooltip = "";
+
+        [NetworkMessage("MALFUNCTION_RESET")]
+        public class MalfunctionResetNetworkHandler : NetworkMessageHandler
+        {
+            public override void Handler(ulong sender)
+            {
+                Plugin.logger.LogDebug($"Received networking malfunction reset broadcast!");
+
+                RestoreAfterMalfunctions();
+            }
+        }
+
+        public class MalfunctionNavigationNetworkMessage
+        {
+            public bool result;
+            public int levelId;
+
+            public MalfunctionNavigationNetworkMessage(bool result, int levelId)
+            {
+                this.result = result;
+                this.levelId = levelId;
+            }
+        }
+
+        [NetworkMessage("MALFUNCTION_NAVIGATION")]
+        public class MalfunctionNavigationNetworkHandler
+            : NetworkMessageHandler<MalfunctionNavigationNetworkMessage>
+        {
+            public override void Handler(ulong sender, MalfunctionNavigationNetworkMessage message)
+            {
+                Plugin.logger.LogDebug(
+                    $"Received network broadcast malfunction navigation roll result: {message.result} (levelId: {message.levelId})"
+                );
+
+                HandleRollNavigation(message.result, message.levelId);
+            }
+        }
+
+        public class MalfunctionTeleporterNetworkMessage
+        {
+            public bool result;
+            public int delay;
+
+            public MalfunctionTeleporterNetworkMessage(bool result, int delay)
+            {
+                this.result = result;
+                this.delay = delay;
+            }
+        }
+
+        [NetworkMessage("MALFUNCTION_TELEPORTER")]
+        public class MalfunctionTeleporterNetworkHandler
+            : NetworkMessageHandler<MalfunctionTeleporterNetworkMessage>
+        {
+            public override void Handler(ulong sender, MalfunctionTeleporterNetworkMessage message)
+            {
+                Plugin.logger.LogDebug(
+                    $"Received network broadcast malfunction teleporter roll result: {message.result} (Delay: {message.delay})"
+                );
+
+                HandleRollTeleporter(message.result, message.delay);
+            }
+        }
+
+        public class MalfunctionDistortionNetworkMessage
+        {
+            public bool result;
+            public int delay;
+
+            public MalfunctionDistortionNetworkMessage(bool result, int delay)
+            {
+                this.result = result;
+                this.delay = delay;
+            }
+        }
+
+        [NetworkMessage("MALFUNCTION_DISTORTION")]
+        public class MalfunctionDistortionNetworkHandler
+            : NetworkMessageHandler<MalfunctionDistortionNetworkMessage>
+        {
+            public override void Handler(ulong sender, MalfunctionDistortionNetworkMessage message)
+            {
+                Plugin.logger.LogDebug(
+                    $"Received network broadcast malfunction distortion roll result: {message.result} (Delay: {message.delay})"
+                );
+
+                HandleRollDistortion(message.result, message.delay);
+            }
+        }
+
+        public class MalfunctionDoorNetworkMessage
+        {
+            public bool result;
+            public int delay;
+
+            public MalfunctionDoorNetworkMessage(bool result, int delay)
+            {
+                this.result = result;
+                this.delay = delay;
+            }
+        }
+
+        [NetworkMessage("MALFUNCTION_DOOR")]
+        public class MalfunctionDoorNetworkHandler
+            : NetworkMessageHandler<MalfunctionDoorNetworkMessage>
+        {
+            public override void Handler(ulong sender, MalfunctionDoorNetworkMessage message)
+            {
+                Plugin.logger.LogDebug(
+                    $"Received network broadcast malfunction door roll result: {message.result} (Delay: {message.delay})"
+                );
+
+                HandleRollDoor(message.result, message.delay);
+            }
+        }
+
+        public class MalfunctionLeverNetworkMessage
+        {
+            public bool result;
+            public int delay;
+
+            public MalfunctionLeverNetworkMessage(bool result, int delay)
+            {
+                this.result = result;
+                this.delay = delay;
+            }
+        }
+
+        [NetworkMessage("MALFUNCTION_LEVER")]
+        public class MalfunctionLeverNetworkHandler
+            : NetworkMessageHandler<MalfunctionLeverNetworkMessage>
+        {
+            public override void Handler(ulong sender, MalfunctionLeverNetworkMessage message)
+            {
+                Plugin.logger.LogDebug(
+                    $"Received network broadcast malfunction lever roll result: {message.result} (Delay: {message.delay})"
+                );
+
+                HandleRollLever(message.result, message.delay);
+            }
+        }
+
+        public class MalfunctionPowerNetworkMessage
+        {
+            public bool result;
+            public bool blockResult;
+
+            public MalfunctionPowerNetworkMessage(bool result, bool blockResult)
+            {
+                this.result = result;
+                this.blockResult = blockResult;
+            }
+        }
+
+        [NetworkMessage("MALFUNCTION_POWER")]
+        public class MalfunctionPowerNetworkHandler
+            : NetworkMessageHandler<MalfunctionPowerNetworkMessage>
+        {
+            public override void Handler(ulong sender, MalfunctionPowerNetworkMessage message)
+            {
+                Plugin.logger.LogDebug(
+                    $"Received network broadcast malfunction power roll result: {message.result} (Block lever: {message.blockResult})"
+                );
+
+                HandleRollPower(message.result, message.blockResult);
+            }
+        }
 
         // Check if there were any dead players. Required for the malfunction penalty.
         [HarmonyPrefix]
@@ -56,7 +227,13 @@ namespace Malfunctions.Patches
         [HarmonyPatch("ReviveDeadPlayers")]
         private static void RollMalfunctions(StartOfRound __instance)
         {
-            #region Chance Rolls
+            RestoreAfterMalfunctions();
+
+            // Reset all malfunctions if consecutive mode is enabled to allow triggering even if previously triggerd.
+            if (Config.MalfunctionMiscAllowConsecutive.Value)
+            {
+                State.Reset();
+            }
 
             // Add the current epoch timestamp to the random map seed to still
             // sync up but have a varied experience not bound to seeds alone.
@@ -73,90 +250,306 @@ namespace Malfunctions.Patches
 
             Plugin.logger.LogDebug($"Got random synced seed: {syncedSeed}");
 
-            // Perform the rolls.
-            double malfunctionNavigationRoll = rand.NextDouble() * 100;
-            double malfunctionTeleporterRoll = rand.NextDouble() * 100;
-            double malfunctionDistortionRoll = rand.NextDouble() * 100;
-            double malfunctionPowerRoll = rand.NextDouble() * 100;
-            double malfunctionDoorRoll = rand.NextDouble() * 100;
-
-            // Penalty multiplier if a body wasn't recovered.
-            double multiplier = 1;
-            if (Config.MalfunctionPenaltyEnabled.Value)
-            {
-                Plugin.logger.LogDebug(
-                    "Penalty multiplier active. Checking for unrecovered players."
-                );
-
-                if (hadUnrecoveredDeadPlayers == true)
-                {
-                    multiplier = Config.MalfunctionPenaltyMultiplier.Value;
-
-                    Plugin.logger.LogDebug(
-                        "Had unrecovered players. Increasing malfunction multiplier for this round."
-                    );
-                }
-                else if (Config.MalfunctionPenaltyOnly.Value)
-                {
-                    multiplier = 0;
-
-                    Plugin.logger.LogDebug(
-                        "No unrecovered players. Setting probability to zero as penalty mode only is enabled."
-                    );
-                }
-            }
-
-            // Check our rolls.
-            bool malfunctionNavigationRollSucceeded =
-                Config.MalfunctionChanceNavigation.Value != 0
-                && malfunctionNavigationRoll
-                    < Config.MalfunctionChanceNavigation.Value * multiplier;
-
-            bool malfunctionTeleporterRollSucceeded =
-                Config.MalfunctionChanceTeleporter.Value != 0
-                && malfunctionTeleporterRoll
-                    < Config.MalfunctionChanceTeleporter.Value * multiplier;
-
-            bool malfunctionDistortionRollSucceeded =
-                Config.MalfunctionChanceDistortion.Value != 0
-                && malfunctionDistortionRoll
-                    < Config.MalfunctionChanceDistortion.Value * multiplier;
-
-            bool malfunctionDoorRollSucceeded =
-                Config.MalfunctionChanceDoor.Value != 0
-                && malfunctionDoorRoll < Config.MalfunctionChanceDoor.Value * multiplier;
-
-            bool malfunctionPowerRollSucceeded =
-                Config.MalfunctionChancePower.Value != 0
-                && malfunctionPowerRoll < Config.MalfunctionChancePower.Value * multiplier;
-
-            Plugin.logger.LogDebug(
-                $"Malfunction Navigation Roll: {malfunctionNavigationRoll} < {Config.MalfunctionChanceNavigation.Value * multiplier} ({(malfunctionNavigationRollSucceeded ? "SUCCESS" : "FAIL")})"
-            );
-
-            Plugin.logger.LogDebug(
-                $"Malfunction Teleporter Roll: {malfunctionTeleporterRoll} < {Config.MalfunctionChanceTeleporter.Value * multiplier} ({(malfunctionTeleporterRollSucceeded ? "SUCCESS" : "FAIL")})"
-            );
-
-            Plugin.logger.LogDebug(
-                $"Malfunction Distortion Roll: {malfunctionDistortionRoll} < {Config.MalfunctionChanceDistortion.Value * multiplier} ({(malfunctionDistortionRollSucceeded ? "SUCCESS" : "FAIL")})"
-            );
-
-            Plugin.logger.LogDebug(
-                $"Malfunction Door Roll: {malfunctionDoorRoll} < {Config.MalfunctionChanceDoor.Value * multiplier} ({(malfunctionDoorRollSucceeded ? "SUCCESS" : "FAIL")})"
-            );
-
-            Plugin.logger.LogDebug(
-                $"Malfunction Power Roll: {malfunctionPowerRoll} < {Config.MalfunctionChancePower.Value * multiplier} ({(malfunctionPowerRollSucceeded ? "SUCCESS" : "FAIL")})"
-            );
-
             Plugin.logger.LogDebug(
                 $"Elapsed days: {__instance.gameStats.daysSpent} / Days to next deadline: {TimeOfDay.Instance.daysUntilDeadline}"
             );
 
-            #endregion
+            if (__instance.IsServer)
+            {
+                #region Chance Rolls
 
-            #region Restore
+                // Perform the rolls.
+                double malfunctionNavigationRoll = rand.NextDouble() * 100;
+                double malfunctionTeleporterRoll = rand.NextDouble() * 100;
+                double malfunctionDistortionRoll = rand.NextDouble() * 100;
+                double malfunctionPowerRoll = rand.NextDouble() * 100;
+                double malfunctionLeverRoll = rand.NextDouble() * 100;
+                double malfunctionDoorRoll = rand.NextDouble() * 100;
+
+                // Penalty multiplier if a body wasn't recovered.
+                double multiplier = 1;
+                if (Config.MalfunctionPenaltyEnabled.Value)
+                {
+                    Plugin.logger.LogDebug(
+                        "Penalty multiplier active. Checking for unrecovered players."
+                    );
+
+                    if (hadUnrecoveredDeadPlayers == true)
+                    {
+                        multiplier = Config.MalfunctionPenaltyMultiplier.Value;
+
+                        Plugin.logger.LogDebug(
+                            "Had unrecovered players. Increasing malfunction multiplier for this round."
+                        );
+                    }
+                    else if (Config.MalfunctionPenaltyOnly.Value)
+                    {
+                        multiplier = 0;
+
+                        Plugin.logger.LogDebug(
+                            "No unrecovered players. Setting probability to zero as penalty mode only is enabled."
+                        );
+                    }
+                }
+
+                // Check our rolls.
+                bool malfunctionNavigationRollSucceeded =
+                    Config.MalfunctionChanceNavigation.Value != 0
+                    && malfunctionNavigationRoll
+                        < Config.MalfunctionChanceNavigation.Value * multiplier;
+
+                bool malfunctionTeleporterRollSucceeded =
+                    Config.MalfunctionChanceTeleporter.Value != 0
+                    && malfunctionTeleporterRoll
+                        < Config.MalfunctionChanceTeleporter.Value * multiplier;
+
+                bool malfunctionDistortionRollSucceeded =
+                    Config.MalfunctionChanceDistortion.Value != 0
+                    && malfunctionDistortionRoll
+                        < Config.MalfunctionChanceDistortion.Value * multiplier;
+
+                bool malfunctionDoorRollSucceeded =
+                    Config.MalfunctionChanceDoor.Value != 0
+                    && malfunctionDoorRoll < Config.MalfunctionChanceDoor.Value * multiplier;
+
+                bool malfunctionLeverRollSucceeded =
+                    Config.MalfunctionChanceLever.Value != 0
+                    && malfunctionLeverRoll < Config.MalfunctionChanceLever.Value * multiplier;
+
+                bool malfunctionPowerRollSucceeded =
+                    Config.MalfunctionChancePower.Value != 0
+                    && malfunctionPowerRoll < Config.MalfunctionChancePower.Value * multiplier;
+
+                Plugin.logger.LogDebug(
+                    $"Malfunction Navigation Roll: {malfunctionNavigationRoll} < {Config.MalfunctionChanceNavigation.Value * multiplier} ({(malfunctionNavigationRollSucceeded ? "SUCCESS" : "FAIL")})"
+                );
+
+                Plugin.logger.LogDebug(
+                    $"Malfunction Teleporter Roll: {malfunctionTeleporterRoll} < {Config.MalfunctionChanceTeleporter.Value * multiplier} ({(malfunctionTeleporterRollSucceeded ? "SUCCESS" : "FAIL")})"
+                );
+
+                Plugin.logger.LogDebug(
+                    $"Malfunction Distortion Roll: {malfunctionDistortionRoll} < {Config.MalfunctionChanceDistortion.Value * multiplier} ({(malfunctionDistortionRollSucceeded ? "SUCCESS" : "FAIL")})"
+                );
+
+                Plugin.logger.LogDebug(
+                    $"Malfunction Door Roll: {malfunctionDoorRoll} < {Config.MalfunctionChanceDoor.Value * multiplier} ({(malfunctionDoorRollSucceeded ? "SUCCESS" : "FAIL")})"
+                );
+
+                Plugin.logger.LogDebug(
+                    $"Malfunction Lever Roll: {malfunctionLeverRoll} < {Config.MalfunctionChanceLever.Value * multiplier} ({(malfunctionLeverRollSucceeded ? "SUCCESS" : "FAIL")})"
+                );
+
+                Plugin.logger.LogDebug(
+                    $"Malfunction Power Roll: {malfunctionPowerRoll} < {Config.MalfunctionChancePower.Value * multiplier} ({(malfunctionPowerRollSucceeded ? "SUCCESS" : "FAIL")})"
+                );
+
+                // Calculate an additional roll for the lever to be broken during the power malfunction.
+                double blockLeverRoll = rand.NextDouble() * 100;
+
+                bool blockLeverSucceeded =
+                    Config.MalfunctionPowerBlockLeverChance.Value != 0
+                    && blockLeverRoll < Config.MalfunctionPowerBlockLeverChance.Value;
+
+                Plugin.logger.LogDebug(
+                    $"Malfunction Power - Block Lever Roll : {blockLeverRoll} < {Config.MalfunctionPowerBlockLeverChance.Value} ({(blockLeverSucceeded ? "SUCCESS" : "FAIL")})"
+                );
+
+                #endregion
+
+                #region Navigation
+
+                if (
+                    StartOfRound.Instance.gameStats.daysSpent
+                    <= Config.MalfunctionPassedDaysNavigation.Value
+                )
+                {
+                    Plugin.logger.LogDebug(
+                        $"Blocking navigation malfunction because elapsed days hasn't passed required threshold: {StartOfRound.Instance.gameStats.daysSpent} / {Config.MalfunctionPassedDaysNavigation.Value}"
+                    );
+
+                    malfunctionNavigationRollSucceeded = false;
+                }
+
+                // Create an array of levels that we can use to filter out ones like the company.
+                SelectableLevel[] filteredLevels = StartOfRound
+                    .Instance.levels.Where(level => level.name != "CompanyBuildingLevel")
+                    .ToArray();
+
+                // Select the next random level from the list of all levels.
+                SelectableLevel selected = rand.NextFromCollection(filteredLevels);
+
+                if (malfunctionNavigationRollSucceeded)
+                {
+                    foreach (SelectableLevel level in filteredLevels)
+                    {
+                        Plugin.logger.LogDebug(
+                            $"Level ID: {level.levelID} / Level Name: {level.name}"
+                        );
+                    }
+
+                    Plugin.logger.LogDebug($"Selected Level ID: {selected.levelID}");
+                }
+
+                Network.Broadcast(
+                    "MALFUNCTION_NAVIGATION",
+                    new MalfunctionNavigationNetworkMessage(
+                        malfunctionNavigationRollSucceeded,
+                        selected.levelID
+                    )
+                );
+
+                HandleRollNavigation(malfunctionNavigationRollSucceeded, selected.levelID);
+
+                #endregion
+
+                #region Teleporter
+
+                if (
+                    StartOfRound.Instance.gameStats.daysSpent
+                    <= Config.MalfunctionPassedDaysTeleporter.Value
+                )
+                {
+                    Plugin.logger.LogDebug(
+                        $"Blocking teleporter malfunction because elapsed days hasn't passed required threshold: {StartOfRound.Instance.gameStats.daysSpent} / {Config.MalfunctionPassedDaysTeleporter.Value}"
+                    );
+
+                    malfunctionTeleporterRollSucceeded = false;
+                }
+
+                int teleporterDelay = 1 + rand.Next(11);
+
+                Network.Broadcast(
+                    "MALFUNCTION_TELEPORTER",
+                    new MalfunctionTeleporterNetworkMessage(
+                        malfunctionTeleporterRollSucceeded,
+                        teleporterDelay
+                    )
+                );
+
+                HandleRollTeleporter(malfunctionTeleporterRollSucceeded, teleporterDelay);
+
+                #endregion
+
+                #region Distortion
+
+                if (
+                    StartOfRound.Instance.gameStats.daysSpent
+                    <= Config.MalfunctionPassedDaysDistortion.Value
+                )
+                {
+                    Plugin.logger.LogDebug(
+                        $"Blocking distortion malfunction because elapsed days hasn't passed required threshold: {StartOfRound.Instance.gameStats.daysSpent} / {Config.MalfunctionPassedDaysDistortion.Value}"
+                    );
+
+                    malfunctionDistortionRollSucceeded = false;
+                }
+
+                int distortionDelay = rand.Next(12);
+
+                Network.Broadcast(
+                    "MALFUNCTION_DISTORTION",
+                    new MalfunctionDistortionNetworkMessage(
+                        malfunctionDistortionRollSucceeded,
+                        distortionDelay
+                    )
+                );
+
+                HandleRollDistortion(malfunctionDistortionRollSucceeded, distortionDelay);
+
+                #endregion
+
+                #region Door
+
+                if (
+                    StartOfRound.Instance.gameStats.daysSpent
+                    <= Config.MalfunctionPassedDaysDoor.Value
+                )
+                {
+                    Plugin.logger.LogDebug(
+                        $"Blocking door malfunction because elapsed days hasn't passed required threshold: {StartOfRound.Instance.gameStats.daysSpent} / {Config.MalfunctionPassedDaysDoor.Value}"
+                    );
+
+                    malfunctionDoorRollSucceeded = false;
+                }
+
+                int doorDelay = 4 + rand.Next(8);
+
+                Network.Broadcast(
+                    "MALFUNCTION_DOOR",
+                    new MalfunctionDoorNetworkMessage(malfunctionDoorRollSucceeded, doorDelay)
+                );
+
+                HandleRollDoor(malfunctionDoorRollSucceeded, doorDelay);
+
+                #endregion
+
+                #region Lever
+
+                if (
+                    StartOfRound.Instance.gameStats.daysSpent
+                    <= Config.MalfunctionPassedDaysLever.Value
+                )
+                {
+                    Plugin.logger.LogDebug(
+                        $"Blocking lever malfunction because elapsed days hasn't passed required threshold: {StartOfRound.Instance.gameStats.daysSpent} / {Config.MalfunctionPassedDaysLever.Value}"
+                    );
+
+                    malfunctionLeverRollSucceeded = false;
+                }
+
+                int leverDelay = rand.Next(4);
+
+                Network.Broadcast(
+                    "MALFUNCTION_LEVER",
+                    new MalfunctionLeverNetworkMessage(malfunctionLeverRollSucceeded, leverDelay)
+                );
+
+                HandleRollLever(malfunctionLeverRollSucceeded, leverDelay);
+
+                #endregion
+
+                #region Power
+
+                if (
+                    StartOfRound.Instance.gameStats.daysSpent
+                    <= Config.MalfunctionPassedDaysPower.Value
+                )
+                {
+                    Plugin.logger.LogDebug(
+                        $"Blocking power malfunction because elapsed days hasn't passed required threshold: {StartOfRound.Instance.gameStats.daysSpent} / {Config.MalfunctionPassedDaysPower.Value}"
+                    );
+
+                    malfunctionPowerRollSucceeded = false;
+                }
+
+                Network.Broadcast(
+                    "MALFUNCTION_POWER",
+                    new MalfunctionPowerNetworkMessage(
+                        malfunctionPowerRollSucceeded,
+                        blockLeverSucceeded
+                    )
+                );
+
+                HandleRollPower(malfunctionPowerRollSucceeded, blockLeverSucceeded);
+
+                #endregion
+            }
+        }
+
+        private static void RestoreAfterMalfunctions()
+        {
+            // Reset the disabled tooltip on the lever device.
+            StartMatchLever leverDevice = UnityEngine.Object.FindObjectOfType<StartMatchLever>();
+
+            if (leverDevice == null)
+            {
+                Plugin.logger.LogError("Failed to find lever device object.");
+            }
+            else
+            {
+                leverDevice.triggerScript.disabledHoverTip = originalLeverDisableTooltip;
+            }
 
             // Restore terminal functionality.
             Terminal terminal = UnityEngine.Object.FindObjectOfType<Terminal>();
@@ -216,21 +609,10 @@ namespace Malfunctions.Patches
                     floodlight2Mesh.materials = materials;
                 }
             }
+        }
 
-            // Reset all malfunctions if consecutive mode is enabled to allow triggering even if previously triggerd.
-            if (Config.MalfunctionMiscAllowConsecutive.Value)
-            {
-                State.MalfunctionNavigation.Reset();
-                State.MalfunctionTeleporter.Reset();
-                State.MalfunctionDistortion.Reset();
-                State.MalfunctionDoor.Reset();
-                State.MalfunctionPower.Reset();
-            }
-
-            #endregion
-
-            #region Navigation
-
+        private static void HandleRollNavigation(bool result, int level)
+        {
             // If we previously had a navigation malfunction make sure to reset it and any children.
             if (
                 State.MalfunctionNavigation.Active
@@ -244,45 +626,23 @@ namespace Malfunctions.Patches
             {
                 // Make sure we can't trigger the navigation malfunction on the last day.
                 if (
-                    __instance.currentLevel.name != "CompanyBuildingLevel"
+                    StartOfRound.Instance.currentLevel.name != "CompanyBuildingLevel"
                     && TimeOfDay.Instance.daysUntilDeadline >= 2
-                    && __instance.gameStats.daysSpent > Config.MalfunctionPassedDaysNavigation.Value
                 )
                 {
-                    if (malfunctionNavigationRollSucceeded)
+                    if (result)
                     {
-                        // Create an array of levels that we can use to filter out ones like the company.
-                        SelectableLevel[] filteredLevels = __instance
-                            .levels.Where(level => level.name != "CompanyBuildingLevel")
-                            .ToArray();
-
-                        // TODO: Figure out how to get the value of a moon outside of the terminal node.
-                        // if (Config.MalfunctionNavigationBlockAboveQuota.Value) { }
-
-                        // Select the next random level from the list of all levels.
-                        SelectableLevel selected = rand.NextFromCollection(filteredLevels);
-
                         // Set the current level to the one we have now selected.
-                        __instance.ChangeLevel(selected.levelID);
-
-                        foreach (SelectableLevel level in filteredLevels)
-                        {
-                            Plugin.logger.LogDebug(
-                                $"Level ID: {level.levelID} / Level Name: {level.name}"
-                            );
-                        }
-
-                        Plugin.logger.LogDebug($"Selected Level ID: {selected.levelID}");
+                        StartOfRound.Instance.ChangeLevel(level);
 
                         State.MalfunctionNavigation.Active = true;
                     }
                 }
             }
+        }
 
-            #endregion
-
-            #region Teleporter
-
+        private static void HandleRollTeleporter(bool result, int delay)
+        {
             // If we previously had a teleporter malfunction make sure to reset it and any children.
             if (State.MalfunctionTeleporter.Active || TimeOfDay.Instance.daysUntilDeadline < 2)
             {
@@ -293,18 +653,17 @@ namespace Malfunctions.Patches
             {
                 // Make sure we can't trigger the teleporter malfunction on the last day.
                 if (
-                    __instance.currentLevel.name != "CompanyBuildingLevel"
+                    StartOfRound.Instance.currentLevel.name != "CompanyBuildingLevel"
                     && TimeOfDay.Instance.daysUntilDeadline >= 2
-                    && __instance.gameStats.daysSpent > Config.MalfunctionPassedDaysTeleporter.Value
                 )
                 {
-                    if (malfunctionTeleporterRollSucceeded)
+                    if (result)
                     {
                         // Only enable the teleporter malfunction if players have a teleporter.
                         if (UnityEngine.Object.FindObjectOfType<ShipTeleporter>() != null)
                         {
                             // Set the teleporter hour delay.
-                            State.MalfunctionTeleporter.Delay = 1 + rand.Next(11);
+                            State.MalfunctionTeleporter.Delay = delay;
 
                             State.MalfunctionTeleporter.Active = true;
 
@@ -321,11 +680,10 @@ namespace Malfunctions.Patches
                     }
                 }
             }
+        }
 
-            #endregion
-
-            #region Distortion
-
+        public static void HandleRollDistortion(bool result, int delay)
+        {
             // If we previously had a distortion malfunction make sure to reset it and any children.
             if (State.MalfunctionDistortion.Active || TimeOfDay.Instance.daysUntilDeadline < 2)
             {
@@ -336,15 +694,14 @@ namespace Malfunctions.Patches
             {
                 // Make sure we can't trigger the distortion malfunction on the last day.
                 if (
-                    __instance.currentLevel.name != "CompanyBuildingLevel"
+                    StartOfRound.Instance.currentLevel.name != "CompanyBuildingLevel"
                     && TimeOfDay.Instance.daysUntilDeadline >= 2
-                    && __instance.gameStats.daysSpent > Config.MalfunctionPassedDaysDistortion.Value
                 )
                 {
-                    if (malfunctionDistortionRollSucceeded)
+                    if (result)
                     {
                         // Set the distortion hour delay.
-                        State.MalfunctionDistortion.Delay = rand.Next(0);
+                        State.MalfunctionDistortion.Delay = delay;
 
                         State.MalfunctionDistortion.Active = true;
 
@@ -354,12 +711,11 @@ namespace Malfunctions.Patches
                     }
                 }
             }
+        }
 
-            #endregion
-
-            #region Door
-
-            // If we previously had a distortion malfunction make sure to reset it and any children.
+        public static void HandleRollDoor(bool result, int delay)
+        {
+            // If we previously had a door malfunction make sure to reset it and any children.
             if (State.MalfunctionDoor.Active || TimeOfDay.Instance.daysUntilDeadline < 2)
             {
                 State.MalfunctionDoor.Reset();
@@ -369,18 +725,17 @@ namespace Malfunctions.Patches
             {
                 // Make sure we can't trigger the distortion malfunction on the last day.
                 if (
-                    __instance.currentLevel.name != "CompanyBuildingLevel"
+                    StartOfRound.Instance.currentLevel.name != "CompanyBuildingLevel"
                     && TimeOfDay.Instance.daysUntilDeadline >= 2
-                    && __instance.gameStats.daysSpent > Config.MalfunctionPassedDaysDoor.Value
                 )
                 {
-                    if (malfunctionDoorRollSucceeded)
+                    if (result)
                     {
                         // Make sure we capture the door panel for later.
                         elevatorPanelScreen = GameObject.Find("ElevatorPanelScreen");
 
                         // Set the door hour delay.
-                        State.MalfunctionDoor.Delay = 4 + rand.Next(8);
+                        State.MalfunctionDoor.Delay = delay;
 
                         State.MalfunctionDoor.Active = true;
 
@@ -390,11 +745,43 @@ namespace Malfunctions.Patches
                     }
                 }
             }
+        }
 
-            #endregion
+        public static void HandleRollLever(bool result, int delay)
+        {
+            // If we previously had a lever malfunction make sure to reset it and any children.
+            if (State.MalfunctionLever.Active || TimeOfDay.Instance.daysUntilDeadline < 2)
+            {
+                State.MalfunctionLever.Reset();
+            }
+            // Make sure we don't trigger this malfunction if the power or door one is in place.
+            // The door one is singled out as this would be unfun gameplay to be stuck in the ship
+            // with nothing to do and no take-off scenario.
+            else if (!State.MalfunctionPower.Active && !State.MalfunctionDoor.Active)
+            {
+                // Make sure we can't trigger the lever malfunction on the last day.
+                if (
+                    StartOfRound.Instance.currentLevel.name != "CompanyBuildingLevel"
+                    && TimeOfDay.Instance.daysUntilDeadline >= 2
+                )
+                {
+                    if (result)
+                    {
+                        // Set the lever hour delay.
+                        State.MalfunctionLever.Delay = delay;
 
-            #region Power
+                        State.MalfunctionLever.Active = true;
 
+                        Plugin.logger.LogDebug(
+                            $"Lever malfunction will trigger at {12 + State.MalfunctionLever.Delay}:00"
+                        );
+                    }
+                }
+            }
+        }
+
+        public static void HandleRollPower(bool result, bool blockLever)
+        {
             // If we previously had a power malfunction make sure to reset it and any children.
             if (State.MalfunctionPower.Active || TimeOfDay.Instance.daysUntilDeadline < 2)
             {
@@ -404,42 +791,43 @@ namespace Malfunctions.Patches
             {
                 // Make sure we can't trigger the power malfunction on the last day.
                 if (
-                    __instance.currentLevel.name != "CompanyBuildingLevel"
+                    StartOfRound.Instance.currentLevel.name != "CompanyBuildingLevel"
                     && TimeOfDay.Instance.daysUntilDeadline >= 2
-                    && __instance.gameStats.daysSpent > Config.MalfunctionPassedDaysPower.Value
                 )
                 {
-                    if (malfunctionPowerRollSucceeded)
+                    if (result)
                     {
                         // Make sure we capture the door panel for later.
                         elevatorPanelScreen = GameObject.Find("ElevatorPanelScreen");
 
                         State.MalfunctionPower.Active = true;
 
-                        // Calculate an additional roll for the lever to be broken.
-                        double blockLeverRoll = rand.NextDouble() * 100;
-                        bool blockLeverSucceeded =
-                            Config.MalfunctionPowerBlockLeverChance.Value != 0
-                            && blockLeverRoll < Config.MalfunctionPowerBlockLeverChance.Value;
-
                         // The delay value here represents whether or not the lever is blocked.
-                        if (Config.MalfunctionPowerBlockLever.Value && blockLeverSucceeded)
+                        if (Config.MalfunctionPowerBlockLever.Value && blockLever)
                         {
                             State.MalfunctionPower.Delay = 1;
+
+                            // Change the lever disabled tooltip for all players.
+                            StartMatchLever leverDevice =
+                                UnityEngine.Object.FindObjectOfType<StartMatchLever>();
+
+                            if (leverDevice == null)
+                            {
+                                Plugin.logger.LogError("Failed to find lever device object.");
+
+                                return;
+                            }
+
+                            leverDevice.triggerScript.disabledHoverTip =
+                                "[There is no power to the hydraulics system]";
                         }
                         else
                         {
                             State.MalfunctionPower.Delay = 0;
                         }
-
-                        Plugin.logger.LogDebug(
-                            $"Malfunction Power - Block Lever Roll : {blockLeverRoll} < {Config.MalfunctionPowerBlockLeverChance.Value} ({(blockLeverSucceeded ? "SUCCESS" : "FAIL")})"
-                        );
                     }
                 }
             }
-
-            #endregion
         }
 
         // Update the navigation moon info screen with relevant information.
@@ -448,6 +836,18 @@ namespace Malfunctions.Patches
         [HarmonyAfter(new string[] { "jamil.corporate_restructure", "WeatherTweaks" })]
         private static void OverwriteMapScreenInfo(StartOfRound __instance)
         {
+            // Get the lever device so we can capture its original tooltip.
+            StartMatchLever leverDevice = UnityEngine.Object.FindObjectOfType<StartMatchLever>();
+
+            if (leverDevice == null)
+            {
+                Plugin.logger.LogError("Failed to find lever device object.");
+            }
+            else
+            {
+                originalLeverDisableTooltip = leverDevice.triggerScript.disabledHoverTip;
+            }
+
             // Make sure to only show the Malfunction notification if it's active, we're not on the company
             // and if it wasn't shown previously such as on a reload of the save.
             if (
@@ -456,7 +856,6 @@ namespace Malfunctions.Patches
                 && State.MalfunctionNavigation.Notified == false
             )
             {
-                // TODO: Swap this out with a custom HUD animation prefab similar to the radation one.
                 HUDManager.Instance.globalNotificationText.text =
                     "SHIP NAVIGATION MALFUNCTION:\nROUTE TABLE OFFSET ERROR";
 
@@ -480,9 +879,6 @@ namespace Malfunctions.Patches
                 __instance.screenLevelVideoReel.Stop();
 
                 // Create sparks on the lever for the navigation malfunction.
-                StartMatchLever leverDevice =
-                    UnityEngine.Object.FindObjectOfType<StartMatchLever>();
-
                 if (leverDevice == null)
                 {
                     Plugin.logger.LogError("Failed to find lever device object.");
@@ -588,7 +984,6 @@ namespace Malfunctions.Patches
                         terminal.terminalAudio
                     );
 
-                    // TODO: Swap this out with a custom HUD animation prefab similar to the radation one.
                     HUDManager.Instance.globalNotificationText.text =
                         "SHIP CORE SURGE:\nRUNNING ON EMERGENCY POWER";
 

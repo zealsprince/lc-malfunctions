@@ -85,6 +85,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\Facepunch.Steamworks.Win64.dll</HintPath>
     </Reference>
+    <Reference Include="LC_API">
+      <HintPath>E:\Lethal Company IDE\BepInEx\plugins\2018-LC_API\LC_API.dll</HintPath>
+    </Reference>
     <Reference Include="LethalLib">
       <HintPath>E:\Lethal Company IDE\BepInEx\plugins\Evaisa-LethalLib\LethalLib\LethalLib.dll</HintPath>
     </Reference>
@@ -250,6 +253,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /y "$(ProjectDir)bin\$(ProjectName).dll" "E:\Lethal Company IDE\BepInEx\plugins\zealsprince-Malfunctions"</PostBuildEvent>
