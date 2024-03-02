@@ -1,6 +1,10 @@
 
 # Changelog #
 
+## 1.8.2 ##
+
+- Fix README.md typos because apparently I can't spell anymore
+
 ## 1.8.1 ##
 
 - Add plan for next major upcoming release to README.md
