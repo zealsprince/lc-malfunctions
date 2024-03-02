@@ -2,16 +2,16 @@
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
-using LC_API.Networking;
 
 namespace Malfunctions
 {
     [BepInPlugin(ModGUID, ModName, ModVersion)]
+    [BepInDependency("LethalNetworkAPI")]
     public class Plugin : BaseUnityPlugin
     {
         public const string ModGUID = "com.zealsprince.malfunctions";
         public const string ModName = "Malfunctions";
-        public const string ModVersion = "1.7.1";
+        public const string ModVersion = "1.8.0";
 
         // These need to be lowercase because we're passing through the protected properties.
         public static ManualLogSource logger;
@@ -32,9 +32,6 @@ namespace Malfunctions
 
             // Load the tracking of the malfunction states and objects.
             State.Load();
-
-            // Register LC_API's networking handlers.
-            Network.RegisterAll();
 
             harmony.PatchAll();
         }

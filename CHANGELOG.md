@@ -1,6 +1,10 @@
 
 # Changelog #
 
+## 1.8.0 ##
+
+- Switch network library from LC_API to LethalNetworkAPI
+
 ## 1.7.1 ##
 
 - Fix README.md containing two sections for the door malfunction

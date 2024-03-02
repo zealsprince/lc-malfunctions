@@ -85,11 +85,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\Facepunch.Steamworks.Win64.dll</HintPath>
     </Reference>
-    <Reference Include="LC_API">
-      <HintPath>E:\Lethal Company IDE\BepInEx\plugins\2018-LC_API\LC_API.dll</HintPath>
-    </Reference>
     <Reference Include="LethalLib">
       <HintPath>E:\Lethal Company IDE\BepInEx\plugins\Evaisa-LethalLib\LethalLib\LethalLib.dll</HintPath>
+    </Reference>
+    <Reference Include="LethalNetworkAPI">
+      <HintPath>E:\Lethal Company IDE\BepInEx\plugins\LethalNetworkAPI\LethalNetworkAPI.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Security">
       <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\Mono.Security.dll</HintPath>
@@ -129,7 +129,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\Unity.Collections.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.InputSystem, Version=1.7.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Unity.InputSystem, Version=1.8.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\Unity.InputSystem.dll</HintPath>
     </Reference>

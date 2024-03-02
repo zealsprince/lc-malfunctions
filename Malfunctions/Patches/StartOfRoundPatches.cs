@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using HarmonyLib;
-using LC_API.Networking;
+using LethalNetworkAPI;
 using Malfunctions.Helpers;
 using UnityEngine;
 using static UnityEngine.Rendering.HighDefinition.ScalableSettingLevelParameter;
@@ -26,170 +26,210 @@ namespace Malfunctions.Patches
 
         private static string originalLeverDisableTooltip = "";
 
-        [NetworkMessage("MALFUNCTION_RESET")]
-        public class MalfunctionResetNetworkHandler : NetworkMessageHandler
-        {
-            public override void Handler(ulong sender)
-            {
-                Plugin.logger.LogDebug($"Received networking malfunction reset broadcast!");
+        public static LethalClientEvent MalfunctionResetNetworkClientMessage =
+            new LethalClientEvent("MALFUNCTION_RESET");
 
-                RestoreAfterMalfunctions();
-            }
+        public static void MalfunctionResetNetworkHandler()
+        {
+            Plugin.logger.LogDebug($"Received networking malfunction reset broadcast!");
+
+            RestoreAfterMalfunctions();
         }
 
-        public class MalfunctionNavigationNetworkMessage
+        public static LethalServerMessage<MalfunctionNavigationNetworkData> MalfunctionNavigationNetworkServerMessage =
+            new LethalServerMessage<MalfunctionNavigationNetworkData>("MALFUNCTION_NAVIGATION");
+
+        public static LethalClientMessage<MalfunctionNavigationNetworkData> MalfunctionNavigationNetworkClientMessage =
+            new LethalClientMessage<MalfunctionNavigationNetworkData>("MALFUNCTION_NAVIGATION");
+
+        public class MalfunctionNavigationNetworkData
         {
             public bool result;
             public int levelId;
 
-            public MalfunctionNavigationNetworkMessage(bool result, int levelId)
+            public MalfunctionNavigationNetworkData(bool result, int levelId)
             {
                 this.result = result;
                 this.levelId = levelId;
             }
         }
 
-        [NetworkMessage("MALFUNCTION_NAVIGATION")]
-        public class MalfunctionNavigationNetworkHandler
-            : NetworkMessageHandler<MalfunctionNavigationNetworkMessage>
+        public static void MalfunctionNavigationNetworkHandler(
+            MalfunctionNavigationNetworkData message
+        )
         {
-            public override void Handler(ulong sender, MalfunctionNavigationNetworkMessage message)
-            {
-                Plugin.logger.LogDebug(
-                    $"Received network broadcast malfunction navigation roll result: {message.result} (levelId: {message.levelId})"
-                );
+            Plugin.logger.LogDebug(
+                $"Received network message for malfunction navigation roll result: {message.result} (levelId: {message.levelId})"
+            );
 
-                HandleRollNavigation(message.result, message.levelId);
-            }
+            HandleRollNavigation(message.result, message.levelId);
         }
 
-        public class MalfunctionTeleporterNetworkMessage
+        public static LethalServerMessage<MalfunctionTeleporterNetworkData> MalfunctionTeleporterNetworkServerMessage =
+            new LethalServerMessage<MalfunctionTeleporterNetworkData>("MALFUNCTION_TELEPORTER");
+
+        public static LethalClientMessage<MalfunctionTeleporterNetworkData> MalfunctionTeleporterNetworkClientMessage =
+            new LethalClientMessage<MalfunctionTeleporterNetworkData>("MALFUNCTION_TELEPORTER");
+
+        public class MalfunctionTeleporterNetworkData
         {
             public bool result;
             public int delay;
 
-            public MalfunctionTeleporterNetworkMessage(bool result, int delay)
+            public MalfunctionTeleporterNetworkData(bool result, int delay)
             {
                 this.result = result;
                 this.delay = delay;
             }
         }
 
-        [NetworkMessage("MALFUNCTION_TELEPORTER")]
-        public class MalfunctionTeleporterNetworkHandler
-            : NetworkMessageHandler<MalfunctionTeleporterNetworkMessage>
+        public static void MalfunctionTeleporterNetworkHandler(
+            MalfunctionTeleporterNetworkData message
+        )
         {
-            public override void Handler(ulong sender, MalfunctionTeleporterNetworkMessage message)
-            {
-                Plugin.logger.LogDebug(
-                    $"Received network broadcast malfunction teleporter roll result: {message.result} (Delay: {message.delay})"
-                );
+            Plugin.logger.LogDebug(
+                $"Received network message for malfunction teleporter roll result: {message.result} (Delay: {message.delay})"
+            );
 
-                HandleRollTeleporter(message.result, message.delay);
-            }
+            HandleRollTeleporter(message.result, message.delay);
         }
 
-        public class MalfunctionDistortionNetworkMessage
+        public static LethalServerMessage<MalfunctionDistortionNetworkData> MalfunctionDistortionNetworkServerMessage =
+            new LethalServerMessage<MalfunctionDistortionNetworkData>("MALFUNCTION_DISTORTION");
+
+        public static LethalClientMessage<MalfunctionDistortionNetworkData> MalfunctionDistortionNetworkClientMessage =
+            new LethalClientMessage<MalfunctionDistortionNetworkData>("MALFUNCTION_DISTORTION");
+
+        public class MalfunctionDistortionNetworkData
         {
             public bool result;
             public int delay;
 
-            public MalfunctionDistortionNetworkMessage(bool result, int delay)
+            public MalfunctionDistortionNetworkData(bool result, int delay)
             {
                 this.result = result;
                 this.delay = delay;
             }
         }
 
-        [NetworkMessage("MALFUNCTION_DISTORTION")]
-        public class MalfunctionDistortionNetworkHandler
-            : NetworkMessageHandler<MalfunctionDistortionNetworkMessage>
+        public static void MalfunctionDistortionNetworkHandler(
+            MalfunctionDistortionNetworkData message
+        )
         {
-            public override void Handler(ulong sender, MalfunctionDistortionNetworkMessage message)
-            {
-                Plugin.logger.LogDebug(
-                    $"Received network broadcast malfunction distortion roll result: {message.result} (Delay: {message.delay})"
-                );
+            Plugin.logger.LogDebug(
+                $"Received network message for malfunction distortion roll result: {message.result} (Delay: {message.delay})"
+            );
 
-                HandleRollDistortion(message.result, message.delay);
-            }
+            HandleRollDistortion(message.result, message.delay);
         }
 
-        public class MalfunctionDoorNetworkMessage
+        public static LethalServerMessage<MalfunctionDoorNetworkData> MalfunctionDoorNetworkServerMessage =
+            new LethalServerMessage<MalfunctionDoorNetworkData>("MALFUNCTION_DOOR");
+
+        public static LethalClientMessage<MalfunctionDoorNetworkData> MalfunctionDoorNetworkClientMessage =
+            new LethalClientMessage<MalfunctionDoorNetworkData>("MALFUNCTION_DOOR");
+
+        public class MalfunctionDoorNetworkData
         {
             public bool result;
             public int delay;
 
-            public MalfunctionDoorNetworkMessage(bool result, int delay)
+            public MalfunctionDoorNetworkData(bool result, int delay)
             {
                 this.result = result;
                 this.delay = delay;
             }
         }
 
-        [NetworkMessage("MALFUNCTION_DOOR")]
-        public class MalfunctionDoorNetworkHandler
-            : NetworkMessageHandler<MalfunctionDoorNetworkMessage>
+        public static void MalfunctionDoorNetworkHandler(MalfunctionDoorNetworkData message)
         {
-            public override void Handler(ulong sender, MalfunctionDoorNetworkMessage message)
-            {
-                Plugin.logger.LogDebug(
-                    $"Received network broadcast malfunction door roll result: {message.result} (Delay: {message.delay})"
-                );
+            Plugin.logger.LogDebug(
+                $"Received network message for malfunction door roll result: {message.result} (Delay: {message.delay})"
+            );
 
-                HandleRollDoor(message.result, message.delay);
-            }
+            HandleRollDoor(message.result, message.delay);
         }
 
-        public class MalfunctionLeverNetworkMessage
+        public static LethalServerMessage<MalfunctionLeverNetworkData> MalfunctionLeverNetworkServerMessage =
+            new LethalServerMessage<MalfunctionLeverNetworkData>("MALFUNCTION_LEVER");
+
+        public static LethalClientMessage<MalfunctionLeverNetworkData> MalfunctionLeverNetworkClientMessage =
+            new LethalClientMessage<MalfunctionLeverNetworkData>("MALFUNCTION_LEVER");
+
+        public class MalfunctionLeverNetworkData
         {
             public bool result;
             public int delay;
 
-            public MalfunctionLeverNetworkMessage(bool result, int delay)
+            public MalfunctionLeverNetworkData(bool result, int delay)
             {
                 this.result = result;
                 this.delay = delay;
             }
         }
 
-        [NetworkMessage("MALFUNCTION_LEVER")]
-        public class MalfunctionLeverNetworkHandler
-            : NetworkMessageHandler<MalfunctionLeverNetworkMessage>
+        public static void MalfunctionLeverNetworkHandler(MalfunctionLeverNetworkData message)
         {
-            public override void Handler(ulong sender, MalfunctionLeverNetworkMessage message)
-            {
-                Plugin.logger.LogDebug(
-                    $"Received network broadcast malfunction lever roll result: {message.result} (Delay: {message.delay})"
-                );
+            Plugin.logger.LogDebug(
+                $"Received network message for malfunction lever roll result: {message.result} (Delay: {message.delay})"
+            );
 
-                HandleRollLever(message.result, message.delay);
-            }
+            HandleRollLever(message.result, message.delay);
         }
 
-        public class MalfunctionPowerNetworkMessage
+        public static LethalServerMessage<MalfunctionPowerNetworkData> MalfunctionPowerNetworkServerMessage =
+            new LethalServerMessage<MalfunctionPowerNetworkData>("MALFUNCTION_POWER");
+
+        public static LethalClientMessage<MalfunctionPowerNetworkData> MalfunctionPowerNetworkClientMessage =
+            new LethalClientMessage<MalfunctionPowerNetworkData>("MALFUNCTION_POWER");
+
+        public class MalfunctionPowerNetworkData
         {
             public bool result;
             public bool blockResult;
 
-            public MalfunctionPowerNetworkMessage(bool result, bool blockResult)
+            public MalfunctionPowerNetworkData(bool result, bool blockResult)
             {
                 this.result = result;
                 this.blockResult = blockResult;
             }
         }
 
-        [NetworkMessage("MALFUNCTION_POWER")]
-        public class MalfunctionPowerNetworkHandler
-            : NetworkMessageHandler<MalfunctionPowerNetworkMessage>
+        public static void MalfunctionPowerNetworkHandler(MalfunctionPowerNetworkData message)
         {
-            public override void Handler(ulong sender, MalfunctionPowerNetworkMessage message)
-            {
-                Plugin.logger.LogDebug(
-                    $"Received network broadcast malfunction power roll result: {message.result} (Block lever: {message.blockResult})"
-                );
+            Plugin.logger.LogDebug(
+                $"Received network message for malfunction power roll result: {message.result} (Block lever: {message.blockResult})"
+            );
 
-                HandleRollPower(message.result, message.blockResult);
+            HandleRollPower(message.result, message.blockResult);
+        }
+
+        public static bool NetworkHandlersRegistered = false;
+
+        [HarmonyPostfix]
+        [HarmonyPatch("Start")]
+        public static void RegisterNetworkHandlers()
+        {
+            if (!NetworkHandlersRegistered)
+            {
+                MalfunctionResetNetworkClientMessage.OnReceived += MalfunctionResetNetworkHandler;
+
+                MalfunctionNavigationNetworkClientMessage.OnReceived +=
+                    MalfunctionNavigationNetworkHandler;
+
+                MalfunctionTeleporterNetworkClientMessage.OnReceived +=
+                    MalfunctionTeleporterNetworkHandler;
+
+                MalfunctionDistortionNetworkClientMessage.OnReceived +=
+                    MalfunctionDistortionNetworkHandler;
+
+                MalfunctionDoorNetworkClientMessage.OnReceived += MalfunctionDoorNetworkHandler;
+
+                MalfunctionLeverNetworkClientMessage.OnReceived += MalfunctionLeverNetworkHandler;
+
+                MalfunctionPowerNetworkClientMessage.OnReceived += MalfunctionPowerNetworkHandler;
+
+                Plugin.logger.LogDebug("Registered network handlers!");
             }
         }
 
@@ -227,6 +267,7 @@ namespace Malfunctions.Patches
         [HarmonyPatch("ReviveDeadPlayers")]
         private static void RollMalfunctions(StartOfRound __instance)
         {
+            // Reset everything to a normal state after the malfunctions have passed.
             RestoreAfterMalfunctions();
 
             // Reset all malfunctions if consecutive mode is enabled to allow triggering even if previously triggerd.
@@ -391,15 +432,12 @@ namespace Malfunctions.Patches
                     Plugin.logger.LogDebug($"Selected Level ID: {selected.levelID}");
                 }
 
-                Network.Broadcast(
-                    "MALFUNCTION_NAVIGATION",
-                    new MalfunctionNavigationNetworkMessage(
+                MalfunctionNavigationNetworkServerMessage.SendAllClients(
+                    new MalfunctionNavigationNetworkData(
                         malfunctionNavigationRollSucceeded,
                         selected.levelID
                     )
                 );
-
-                HandleRollNavigation(malfunctionNavigationRollSucceeded, selected.levelID);
 
                 #endregion
 
@@ -419,15 +457,12 @@ namespace Malfunctions.Patches
 
                 int teleporterDelay = 1 + rand.Next(11);
 
-                Network.Broadcast(
-                    "MALFUNCTION_TELEPORTER",
-                    new MalfunctionTeleporterNetworkMessage(
+                MalfunctionTeleporterNetworkServerMessage.SendAllClients(
+                    new MalfunctionTeleporterNetworkData(
                         malfunctionTeleporterRollSucceeded,
                         teleporterDelay
                     )
                 );
-
-                HandleRollTeleporter(malfunctionTeleporterRollSucceeded, teleporterDelay);
 
                 #endregion
 
@@ -447,15 +482,12 @@ namespace Malfunctions.Patches
 
                 int distortionDelay = rand.Next(12);
 
-                Network.Broadcast(
-                    "MALFUNCTION_DISTORTION",
-                    new MalfunctionDistortionNetworkMessage(
+                MalfunctionDistortionNetworkServerMessage.SendAllClients(
+                    new MalfunctionDistortionNetworkData(
                         malfunctionDistortionRollSucceeded,
                         distortionDelay
                     )
                 );
-
-                HandleRollDistortion(malfunctionDistortionRollSucceeded, distortionDelay);
 
                 #endregion
 
@@ -475,12 +507,9 @@ namespace Malfunctions.Patches
 
                 int doorDelay = 4 + rand.Next(8);
 
-                Network.Broadcast(
-                    "MALFUNCTION_DOOR",
-                    new MalfunctionDoorNetworkMessage(malfunctionDoorRollSucceeded, doorDelay)
+                MalfunctionDoorNetworkServerMessage.SendAllClients(
+                    new MalfunctionDoorNetworkData(malfunctionDoorRollSucceeded, doorDelay)
                 );
-
-                HandleRollDoor(malfunctionDoorRollSucceeded, doorDelay);
 
                 #endregion
 
@@ -500,12 +529,9 @@ namespace Malfunctions.Patches
 
                 int leverDelay = rand.Next(4);
 
-                Network.Broadcast(
-                    "MALFUNCTION_LEVER",
-                    new MalfunctionLeverNetworkMessage(malfunctionLeverRollSucceeded, leverDelay)
+                MalfunctionLeverNetworkServerMessage.SendAllClients(
+                    new MalfunctionLeverNetworkData(malfunctionLeverRollSucceeded, leverDelay)
                 );
-
-                HandleRollLever(malfunctionLeverRollSucceeded, leverDelay);
 
                 #endregion
 
@@ -523,12 +549,12 @@ namespace Malfunctions.Patches
                     malfunctionPowerRollSucceeded = false;
                 }
 
-                Network.Broadcast(
-                    "MALFUNCTION_POWER",
-                    new MalfunctionPowerNetworkMessage(
+                MalfunctionPowerNetworkServerMessage.SendAllClients(
+                    new MalfunctionPowerNetworkData(
                         malfunctionPowerRollSucceeded,
                         blockLeverSucceeded
-                    )
+                    ),
+                    false
                 );
 
                 HandleRollPower(malfunctionPowerRollSucceeded, blockLeverSucceeded);
