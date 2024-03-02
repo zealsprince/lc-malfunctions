@@ -229,6 +229,8 @@ namespace Malfunctions.Patches
 
                 MalfunctionPowerNetworkClientMessage.OnReceived += MalfunctionPowerNetworkHandler;
 
+                NetworkHandlersRegistered = true;
+
                 Plugin.logger.LogDebug("Registered network handlers!");
             }
         }
@@ -553,11 +555,8 @@ namespace Malfunctions.Patches
                     new MalfunctionPowerNetworkData(
                         malfunctionPowerRollSucceeded,
                         blockLeverSucceeded
-                    ),
-                    false
+                    )
                 );
-
-                HandleRollPower(malfunctionPowerRollSucceeded, blockLeverSucceeded);
 
                 #endregion
             }

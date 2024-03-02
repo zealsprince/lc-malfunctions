@@ -1,5 +1,5 @@
 
-<img src="https://img.shields.io/badge/version-1.8.0-0AF" /></a>
+<img src="https://img.shields.io/badge/version-1.8.1-0AF" /></a>
 <img src="https://img.shields.io/badge/lc--version-v49-000" /></a>
 
 ![banner](https://github.com/zealsprince/lc-malfunctions/assets/1859270/f2d781e8-2b79-4d80-9e49-d688cc7b99f2)
@@ -93,6 +93,14 @@ Each malfunction has a configuration parameter to gatekeep them from happening e
 - Lever: 0 (Week 1)
 - Power: 11 (Week 4)
 </details>
+
+## Future Plans (2.0.0) ##
+
+For the upcoming and next major version of 2.0.0 I will be focusing in counter-play to the malfunctions. This means players will be able to make more determined decisions when dealing with malfunctions to and remediate them. The following major changes (configurable) will be coming to this mod:
+
+- When a navigation malfunction occurs, players can purchase a company escort to reroute to their previous moon at a cost (300) - this does not prevent other malfunctions from happening during that moon's stay, nor does it fix the display to indicate weather conditions
+- After a navigation malfunction has occurred, players will be able to type `reroute` into the terminal to go to their previous moon without any cost
+- When a malfunction is set to occur during a day, there will be a guaranteed `repair bot` item that spawns in the dungeon which can be used near the ship to repair all malfunctions, stored in the ship to use at a later time or sold to the company for about (300) scrap value
 
 ## Suggestions ##
 

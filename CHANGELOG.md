@@ -1,6 +1,12 @@
 
 # Changelog #
 
+## 1.8.1 ##
+
+- Add plan for next major upcoming release to README.md
+- Fix network handlers registering twice
+- Fix network handler MALFUNCTION_POWER not being called on host causing issues in singleplayer
+
 ## 1.8.0 ##
 
 - Switch network library from LC_API to LethalNetworkAPI
