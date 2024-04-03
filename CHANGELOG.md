@@ -1,6 +1,10 @@
 
 # Changelog #
 
+## 1.8.3 ##
+
+- Patch for v50
+
 ## 1.8.2 ##
 
 - Fix README.md typos because apparently I can't spell anymore

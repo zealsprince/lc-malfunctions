@@ -4,7 +4,6 @@ using HarmonyLib;
 using LethalNetworkAPI;
 using Malfunctions.Helpers;
 using UnityEngine;
-using static UnityEngine.Rendering.HighDefinition.ScalableSettingLevelParameter;
 
 namespace Malfunctions.Patches
 {
@@ -580,7 +579,7 @@ namespace Malfunctions.Patches
             Terminal terminal = UnityEngine.Object.FindObjectOfType<Terminal>();
             if (terminal != null)
             {
-                terminal.terminalTrigger.interactable = true;
+                terminal.gameObject.GetComponent<InteractTrigger>().interactable = true;
             }
 
             // Restore the lights from the door controls.
@@ -897,6 +896,8 @@ namespace Malfunctions.Patches
                 __instance.screenLevelDescription.text =
                     "SHIP NAVIGATION MALFUNCTION\nOrbiting: Unknown\nWeather: Unknown\nBE ADVISED THE ROUTE TABLE WILL RECALIBRATE AFTER LANDING";
 
+                // __instance.screenLevelDescription.text = "SHIP NAVIGATION MALFUNCTION\nOrbiting: Unknown\nWeather: Unknown\nBE ADVISED THE ROUTE TABLE WILL RECALIBRATE AFTER LANDING\nRETURN TO PREVIOUS MOON VIA 'REROUTE' COMMAND";
+
                 // Adopted this code from stromytuna's RouteRandom mod.
                 __instance.screenLevelVideoReel.enabled = false;
                 __instance.screenLevelVideoReel.clip = null;
@@ -924,8 +925,11 @@ namespace Malfunctions.Patches
 
         [HarmonyPostfix]
         [HarmonyPatch("openingDoorsSequence")]
-        private static void TriggerPowerMalfunction(StartOfRound __instance)
+        private static void HandleLevelStart(StartOfRound __instance)
         {
+            // Set the previous moon now that we have landed.
+            State.PreviousMoon = __instance.currentLevel.levelID;
+
             // Check if the power malfunction is active and not triggered yet.
             if (State.MalfunctionPower.Active)
             {
@@ -977,7 +981,7 @@ namespace Malfunctions.Patches
                     Terminal terminal = UnityEngine.Object.FindObjectOfType<Terminal>();
                     if (terminal != null)
                     {
-                        terminal.terminalTrigger.interactable = false;
+                        terminal.gameObject.GetComponent<InteractTrigger>().interactable = false;
                     }
 
                     // Remove the lights from the door controls.
@@ -1004,9 +1008,10 @@ namespace Malfunctions.Patches
                     // Play the stormy weather sound effect from the terminal.
                     StormyWeather stormyWeather =
                         UnityEngine.Object.FindObjectOfType<StormyWeather>(true);
-                    stormyWeather.PlayThunderEffects(
-                        terminal.transform.position,
-                        terminal.terminalAudio
+
+                    RoundManager.PlayRandomClip(
+                        terminal.terminalAudio,
+                        stormyWeather.distantThunderSFX
                     );
 
                     HUDManager.Instance.globalNotificationText.text =

@@ -127,7 +127,7 @@ namespace Malfunctions.Patches
                     }
 
                     // Disable interaction with the terminal.
-                    terminal.terminalTrigger.interactable = false;
+                    terminal.gameObject.GetComponent<InteractTrigger>().interactable = false;
 
                     // Instantiate the new sparks object on top of the lever.
                     GameObject sparks = Assets.SpawnPrefab("sparks", terminal.transform.position);

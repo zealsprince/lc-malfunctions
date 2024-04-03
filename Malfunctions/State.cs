@@ -2,6 +2,8 @@
 {
     internal class State
     {
+        public static int PreviousMoon;
+
         // Track our malfunctions.
         public static Malfunction MalfunctionNavigation;
         public static MalfunctionWithDelay MalfunctionTeleporter;
@@ -12,6 +14,7 @@
 
         public static void Load()
         {
+            PreviousMoon = -1;
             MalfunctionNavigation = new Malfunction();
             MalfunctionTeleporter = new MalfunctionWithDelay();
             MalfunctionDistortion = new MalfunctionWithDelay();
