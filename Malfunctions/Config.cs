@@ -201,7 +201,7 @@ namespace Malfunctions
             );
 
             MalfunctionMiscAllowConsecutive = Plugin.config.Bind(
-                "Mmiscellaneous",
+                "Miscellaneous",
                 "MalfunctionMiscAllowConsecutive",
                 false,
                 new ConfigDescription(

@@ -24,6 +24,8 @@ This malfunction causes teleporters to become temporarily disabled during an exp
 
 It has a high chance of happening moments after landing but can also happen over the course of an expedition at a random moment. A warning after triggering is given to all players.
 
+*Hidden moons are included in possible destinations - be wary*
+
 ### Electromagnetic Disturbance / Communication Malfunction ###
 
 This malfunction causes the communication and map systems to fail during an expedition. Teleporters are still functional but target players at random. Use with caution.

@@ -23,6 +23,9 @@ namespace Malfunctions.Patches
                         1f
                     );
 
+                    // Make sure that the tooltip specifies this.
+                    __instance.triggerScript.disabledHoverTip = "[No power to hydraulics]";
+
                     return false;
                 }
             }

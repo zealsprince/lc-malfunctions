@@ -4,6 +4,8 @@
 ## 1.8.3 ##
 
 - Patch for v50
+- Fix power malfunction showing lever jam tooltip incorrectly
+- Fix soft lock when resetting objects after Malfunctions
 
 ## 1.8.2 ##
 

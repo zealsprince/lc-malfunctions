@@ -573,6 +573,8 @@ namespace Malfunctions.Patches
             else
             {
                 leverDevice.triggerScript.disabledHoverTip = originalLeverDisableTooltip;
+
+                Plugin.logger.LogDebug("Reset lever");
             }
 
             // Restore terminal functionality.
@@ -580,10 +582,21 @@ namespace Malfunctions.Patches
             if (terminal != null)
             {
                 terminal.gameObject.GetComponent<InteractTrigger>().interactable = true;
+
+                Plugin.logger.LogDebug("Reset terminal");
             }
 
             // Restore the lights from the door controls.
-            elevatorPanelScreen?.SetActive(true);
+            if (elevatorPanelScreen == null)
+            {
+                Plugin.logger.LogError("Failed to find door panel screen from previous reference.");
+            }
+            else
+            {
+                elevatorPanelScreen.SetActive(true);
+
+                Plugin.logger.LogDebug("Reset door screen");
+            }
 
             // Restore door functionality.
             GameObject hangarDoorButtonPanel = GameObject.Find("HangarDoorButtonPanel");
@@ -596,6 +609,8 @@ namespace Malfunctions.Patches
                 {
                     trigger.interactable = true;
                 }
+
+                Plugin.logger.LogDebug("Reset door panel");
             }
 
             // If the floodlights were captured, restore them.
@@ -632,6 +647,8 @@ namespace Malfunctions.Patches
                     floodlight1Mesh.materials = materials;
                     floodlight2Mesh.materials = materials;
                 }
+
+                Plugin.logger.LogDebug("Restored lights");
             }
         }
 
@@ -755,9 +772,6 @@ namespace Malfunctions.Patches
                 {
                     if (result)
                     {
-                        // Make sure we capture the door panel for later.
-                        elevatorPanelScreen = GameObject.Find("ElevatorPanelScreen");
-
                         // Set the door hour delay.
                         State.MalfunctionDoor.Delay = delay;
 
@@ -821,29 +835,12 @@ namespace Malfunctions.Patches
                 {
                     if (result)
                     {
-                        // Make sure we capture the door panel for later.
-                        elevatorPanelScreen = GameObject.Find("ElevatorPanelScreen");
-
                         State.MalfunctionPower.Active = true;
 
                         // The delay value here represents whether or not the lever is blocked.
                         if (Config.MalfunctionPowerBlockLever.Value && blockLever)
                         {
                             State.MalfunctionPower.Delay = 1;
-
-                            // Change the lever disabled tooltip for all players.
-                            StartMatchLever leverDevice =
-                                UnityEngine.Object.FindObjectOfType<StartMatchLever>();
-
-                            if (leverDevice == null)
-                            {
-                                Plugin.logger.LogError("Failed to find lever device object.");
-
-                                return;
-                            }
-
-                            leverDevice.triggerScript.disabledHoverTip =
-                                "[There is no power to the hydraulics system]";
                         }
                         else
                         {
@@ -1031,8 +1028,11 @@ namespace Malfunctions.Patches
 
         [HarmonyPostfix]
         [HarmonyPatch("OnShipLandedMiscEvents")]
-        private static void CaptureFloodlights()
+        private static void CaptureGameObjects()
         {
+            // Make sure we capture the door panel for later.
+            elevatorPanelScreen = GameObject.Find("ElevatorPanelScreen");
+
             if (floodlightMaterial == null)
             {
                 // Capture the floodlights while they are active.

@@ -2,8 +2,6 @@
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
-using TerminalApi.Classes;
-using static TerminalApi.TerminalApi;
 
 namespace Malfunctions
 {
@@ -34,26 +32,6 @@ namespace Malfunctions
 
             // Load the tracking of the malfunction states and objects.
             State.Load();
-
-            /*
-            AddCommand(
-                "reroute",
-                new CommandInfo()
-                {
-                    TriggerNode = null,
-                    DisplayTextSupplier = () =>
-                    {
-                        if (State.MalfunctionNavigation.Active) { }
-                        else { }
-
-                        return "Rerouting to previous moon";
-                    },
-                    Category = "Other",
-                    Description =
-                        "Reroute to the previous moon - if a navigation malfunction is active you will be charged 300 credits"
-                }
-            );
-            */
 
             harmony.PatchAll();
         }
