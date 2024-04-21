@@ -582,7 +582,7 @@ namespace Malfunctions.Patches
 
             if (leverDevice == null)
             {
-                Plugin.logger.LogError("Failed to find lever device object.");
+                Plugin.logger.LogWarning("Failed to find lever device object.");
             }
             else
             {
@@ -603,7 +603,9 @@ namespace Malfunctions.Patches
             // Restore the lights from the door controls.
             if (elevatorPanelScreen == null)
             {
-                Plugin.logger.LogError("Failed to find door panel screen from previous reference.");
+                Plugin.logger.LogWarning(
+                    "Failed to find door panel screen from previous reference."
+                );
             }
             else
             {

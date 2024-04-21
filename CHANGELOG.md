@@ -1,6 +1,10 @@
 
 # Changelog #
 
+## 1.8.5 ##
+
+- Downgrade not finding lever/door object logging from `error` to `warn` levels
+
 ## 1.8.4 ##
 
 - Fix `Liquidation` being a level that the navigation malfunction could route to

@@ -1,5 +1,5 @@
 
-<img src="https://img.shields.io/badge/version-1.8.4-0AF" /></a>
+<img src="https://img.shields.io/badge/version-1.8.5-0AF" /></a>
 <img src="https://img.shields.io/badge/lc--version-v50-000" /></a>
 
 ![banner](https://github.com/zealsprince/lc-malfunctions/assets/1859270/f2d781e8-2b79-4d80-9e49-d688cc7b99f2)
