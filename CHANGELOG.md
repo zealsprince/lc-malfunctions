@@ -1,6 +1,10 @@
 
 # Changelog #
 
+## 1.8.4 ##
+
+- Fix `Liquidation` being a level that the navigation malfunction could route to
+
 ## 1.8.3 ##
 
 - Patch for v50

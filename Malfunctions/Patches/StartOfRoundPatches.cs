@@ -234,6 +234,18 @@ namespace Malfunctions.Patches
             }
         }
 
+        [HarmonyPostfix]
+        [HarmonyPatch("Start")]
+        public static void DebugShowLevelIds()
+        {
+            /*
+                foreach (SelectableLevel level in StartOfRound.Instance.levels)
+                {
+                    Plugin.logger.LogDebug(level.name);
+                }
+            */
+        }
+
         // Check if there were any dead players. Required for the malfunction penalty.
         [HarmonyPrefix]
         [HarmonyPatch("EndOfGame")]
@@ -415,7 +427,9 @@ namespace Malfunctions.Patches
 
                 // Create an array of levels that we can use to filter out ones like the company.
                 SelectableLevel[] filteredLevels = StartOfRound
-                    .Instance.levels.Where(level => level.name != "CompanyBuildingLevel")
+                    .Instance.levels.Where(level =>
+                        level.name != "CompanyBuildingLevel" && level.name != "LiquidationLevel"
+                    )
                     .ToArray();
 
                 // Select the next random level from the list of all levels.
