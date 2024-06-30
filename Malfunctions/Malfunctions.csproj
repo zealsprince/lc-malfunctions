@@ -35,6 +35,10 @@
     <NoWarn>IDE0051</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
     <Reference Include="netstandard">
       <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\netstandard.dll</HintPath>
     </Reference>
@@ -113,9 +117,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp" Publicize="true">
-      <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\Assembly-CSharp.dll</HintPath>
-    </Reference>
     <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
@@ -173,7 +174,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
- 
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /y "$(ProjectDir)bin\$(ProjectName).dll" "E:\Lethal Company IDE\BepInEx\plugins\zealsprince-Malfunctions"</PostBuildEvent>

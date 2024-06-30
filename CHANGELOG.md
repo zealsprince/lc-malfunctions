@@ -1,6 +1,10 @@
 
 # Changelog #
 
+## 1.8.6 ##
+
+- Bump version number to indicate v55 compatibility
+
 ## 1.8.5 ##
 
 - Downgrade not finding lever/door object logging from `error` to `warn` levels

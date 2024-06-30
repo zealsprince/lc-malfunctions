@@ -870,7 +870,7 @@ namespace Malfunctions.Patches
         // Update the navigation moon info screen with relevant information.
         [HarmonyPostfix]
         [HarmonyPatch("SetMapScreenInfoToCurrentLevel")]
-        [HarmonyAfter(new string[] { "jamil.corporate_restructure", "WeatherTweaks" })]
+        [HarmonyAfter("jamil.corporate_restructure", "WeatherTweaks")]
         private static void OverwriteMapScreenInfo(StartOfRound __instance)
         {
             // Get the lever device so we can capture its original tooltip.
