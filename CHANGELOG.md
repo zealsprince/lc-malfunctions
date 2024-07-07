@@ -1,6 +1,10 @@
 
 # Changelog #
 
+## 1.8.7 ##
+
+- Bump version number to indicate v56 compatibility
+
 ## 1.8.6 ##
 
 - Bump version number to indicate v55 compatibility
