@@ -22,9 +22,10 @@ namespace Malfunctions.Patches
                 !State.MalfunctionPower.Active
                 && State.MalfunctionTeleporter.Active
                 && !State.MalfunctionTeleporter.Triggered
+                && __instance.currentLevel.name != "CompanyBuildingLevel" // Make sure we don't trigger it at the company.
             )
             {
-                // If the total  time is past our delay, trigger the teleporter timeout.
+                // If the total time is past our delay, trigger the teleporter timeout.
                 if (
                     __instance.currentDayTimeStarted
                     && __instance.hour >= 1 + State.MalfunctionTeleporter.Delay
@@ -86,6 +87,7 @@ namespace Malfunctions.Patches
                 !State.MalfunctionPower.Active
                 && State.MalfunctionDistortion.Active
                 && !State.MalfunctionDistortion.Triggered
+                && __instance.currentLevel.name != "CompanyBuildingLevel"
             )
             {
                 // If the total  time is past our delay, trigger the distortion effect.
@@ -152,6 +154,7 @@ namespace Malfunctions.Patches
                 !State.MalfunctionPower.Active
                 && State.MalfunctionDoor.Active
                 && !State.MalfunctionDoor.Triggered
+                && __instance.currentLevel.name != "CompanyBuildingLevel" // Make sure we don't trigger it at the company.
             )
             {
                 // If the total  time is past our delay, trigger the door timeout. Don't trigger after 10pm if reset.
@@ -274,6 +277,7 @@ namespace Malfunctions.Patches
                 !State.MalfunctionPower.Active
                 && !State.MalfunctionDoor.Active
                 && State.MalfunctionLever.Active
+                && __instance.currentLevel.name != "CompanyBuildingLevel" // Make sure we don't trigger it at the company.
             )
             {
                 // If the total time is past our delay - 4, trigger the lever notification. Don't trigger after 10pm.

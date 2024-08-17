@@ -1,6 +1,14 @@
 
 # Changelog #
 
+## 1.8.9 ##
+
+- Fix Malfunctions triggering at the company
+
+## 1.8.8 ##
+
+- Bump version number to indicate v60 compatibility
+
 ## 1.8.7 ##
 
 - Bump version number to indicate v56 compatibility

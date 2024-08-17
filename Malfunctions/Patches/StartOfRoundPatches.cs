@@ -671,21 +671,14 @@ namespace Malfunctions.Patches
         private static void HandleRollNavigation(bool result, int level)
         {
             // If we previously had a navigation malfunction make sure to reset it and any children.
-            if (
-                State.MalfunctionNavigation.Active
-                || TimeOfDay.Instance.daysUntilDeadline < 2
-                    && !Config.MalfunctionMiscAllowConsecutive.Value
-            )
+            if (State.MalfunctionNavigation.Active || TimeOfDay.Instance.daysUntilDeadline < 2)
             {
                 State.MalfunctionNavigation.Reset();
             }
             else
             {
                 // Make sure we can't trigger the navigation malfunction on the last day.
-                if (
-                    StartOfRound.Instance.currentLevel.name != "CompanyBuildingLevel"
-                    && TimeOfDay.Instance.daysUntilDeadline >= 2
-                )
+                if (TimeOfDay.Instance.daysUntilDeadline >= 2)
                 {
                     if (result)
                     {
@@ -709,10 +702,7 @@ namespace Malfunctions.Patches
             else if (!State.MalfunctionPower.Active)
             {
                 // Make sure we can't trigger the teleporter malfunction on the last day.
-                if (
-                    StartOfRound.Instance.currentLevel.name != "CompanyBuildingLevel"
-                    && TimeOfDay.Instance.daysUntilDeadline >= 2
-                )
+                if (TimeOfDay.Instance.daysUntilDeadline >= 2)
                 {
                     if (result)
                     {
@@ -750,10 +740,7 @@ namespace Malfunctions.Patches
             else if (!State.MalfunctionPower.Active)
             {
                 // Make sure we can't trigger the distortion malfunction on the last day.
-                if (
-                    StartOfRound.Instance.currentLevel.name != "CompanyBuildingLevel"
-                    && TimeOfDay.Instance.daysUntilDeadline >= 2
-                )
+                if (TimeOfDay.Instance.daysUntilDeadline >= 2)
                 {
                     if (result)
                     {
@@ -781,10 +768,7 @@ namespace Malfunctions.Patches
             else if (!State.MalfunctionPower.Active)
             {
                 // Make sure we can't trigger the distortion malfunction on the last day.
-                if (
-                    StartOfRound.Instance.currentLevel.name != "CompanyBuildingLevel"
-                    && TimeOfDay.Instance.daysUntilDeadline >= 2
-                )
+                if (TimeOfDay.Instance.daysUntilDeadline >= 2)
                 {
                     if (result)
                     {
@@ -814,10 +798,7 @@ namespace Malfunctions.Patches
             else if (!State.MalfunctionPower.Active && !State.MalfunctionDoor.Active)
             {
                 // Make sure we can't trigger the lever malfunction on the last day.
-                if (
-                    StartOfRound.Instance.currentLevel.name != "CompanyBuildingLevel"
-                    && TimeOfDay.Instance.daysUntilDeadline >= 2
-                )
+                if (TimeOfDay.Instance.daysUntilDeadline >= 2)
                 {
                     if (result)
                     {
@@ -836,6 +817,13 @@ namespace Malfunctions.Patches
 
         public static void HandleRollPower(bool result, bool blockLever)
         {
+            // Make sure Malfunction can never happen at the company.
+            if (RoundManager.Instance.currentLevel.levelID == 0)
+            {
+                State.MalfunctionPower.Reset();
+                return;
+            }
+
             // If we previously had a power malfunction make sure to reset it and any children.
             if (State.MalfunctionPower.Active || TimeOfDay.Instance.daysUntilDeadline < 2)
             {
@@ -844,10 +832,7 @@ namespace Malfunctions.Patches
             else
             {
                 // Make sure we can't trigger the power malfunction on the last day.
-                if (
-                    StartOfRound.Instance.currentLevel.name != "CompanyBuildingLevel"
-                    && TimeOfDay.Instance.daysUntilDeadline >= 2
-                )
+                if (TimeOfDay.Instance.daysUntilDeadline >= 2)
                 {
                     if (result)
                     {
@@ -943,8 +928,11 @@ namespace Malfunctions.Patches
             // Set the previous moon now that we have landed.
             State.PreviousMoon = __instance.currentLevel.levelID;
 
-            // Check if the power malfunction is active and not triggered yet.
-            if (State.MalfunctionPower.Active)
+            // Check if the power malfunction is active and not triggered yet. Don't trigger if at the company.
+            if (
+                State.MalfunctionPower.Active
+                && __instance.currentLevel.name != "CompanyBuildingLevel"
+            )
             {
                 Plugin.logger.LogDebug($"Triggered power malfunction!");
 
