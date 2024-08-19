@@ -27,6 +27,9 @@ namespace Malfunctions
 
         public static ConfigEntry<bool> MalfunctionMiscAllowConsecutive;
 
+        public static ConfigEntry<bool> MalfunctionVFXDisableSparks;
+        public static ConfigEntry<bool> MalfunctionVFXDisableSparksSound;
+
         public static void Load()
         {
             MalfunctionChanceNavigation = Plugin.config.Bind(
@@ -207,6 +210,22 @@ namespace Malfunctions
                 new ConfigDescription(
                     "Allow malfunctions to trigger consecutively - by default if a malfunction is triggered it can not repeat the next day"
                 )
+            );
+
+            MalfunctionVFXDisableSparks = Plugin.config.Bind(
+                "VFX",
+                "MalfunctionVFXDisableSparks",
+                false,
+                new ConfigDescription(
+                    "Disable spark effects appearing on objects if they are having a malfunction"
+                )
+            );
+
+            MalfunctionVFXDisableSparksSound = Plugin.config.Bind(
+                "VFX",
+                "MalfunctionVFXDisableSparksSound",
+                false,
+                new ConfigDescription("Disable the loud snapping spark sound effects")
             );
         }
     }

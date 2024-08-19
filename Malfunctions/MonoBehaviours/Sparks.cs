@@ -76,12 +76,18 @@ namespace Malfunctions.MonoBehaviours
                 // Flash the light to the maximum set value.
                 currentIntensity = maxIntensity;
 
-                // Play the zap sound.
-                audioSource.pitch = Random.Range(0.7f, 2f);
-                audioSource.Play();
+                if (!Config.MalfunctionVFXDisableSparks.Value)
+                {
+                    if (!Config.MalfunctionVFXDisableSparksSound.Value)
+                    {
+                        // Play the zap sound.
+                        audioSource.pitch = Random.Range(0.7f, 2f);
+                        audioSource.Play();
+                    }
 
-                // Send the effect event signal.
-                visualEffect.SendEvent(beginBurstTrigger.name);
+                    // Send the effect event signal.
+                    visualEffect.SendEvent(beginBurstTrigger.name);
+                }
             }
             else
             {

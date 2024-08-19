@@ -1,6 +1,6 @@
 {
   "name": "Malfunctions",
-  "version_number": "1.8.9",
+  "version_number": "1.9.0",
   "website_url": "https://github.com/zealsprince/lc-malfunctions",
   "description": "Adds random malfunctions to the ship and intends to improve the core game loop with interesting new events.",
   "dependencies": [

@@ -1,6 +1,11 @@
 
 # Changelog #
 
+## 1.9.0 ##
+
+- Add configuration options for disabling sparks or their sounds
+- Bump version number to indicate v61 compatibility
+
 ## 1.8.9 ##
 
 - Fix Malfunctions triggering at the company
