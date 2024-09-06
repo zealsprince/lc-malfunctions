@@ -1,6 +1,10 @@
 
 # Changelog #
 
+## 1.9.1 ##
+
+- Bump version number to indicate v64 compatibility
+
 ## 1.9.0 ##
 
 - Add configuration options for disabling sparks or their sounds

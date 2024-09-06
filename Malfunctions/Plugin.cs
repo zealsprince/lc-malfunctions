@@ -11,7 +11,7 @@ namespace Malfunctions
     {
         public const string ModGUID = "com.zealsprince.malfunctions";
         public const string ModName = "Malfunctions";
-        public const string ModVersion = "1.9.0";
+        public const string ModVersion = "1.9.1";
 
         // These need to be lowercase because we're passing through the protected properties.
         public static ManualLogSource logger;
