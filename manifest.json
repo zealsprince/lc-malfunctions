@@ -1,10 +1,10 @@
 {
   "name": "Malfunctions",
-  "version_number": "1.9.1",
+  "version_number": "1.9.2",
   "website_url": "https://github.com/zealsprince/lc-malfunctions",
   "description": "Adds random malfunctions to the ship and intends to improve the core game loop with interesting new events.",
   "dependencies": [
     "BepInEx-BepInExPack-5.4.2100",
-    "xilophor-LethalNetworkAPI-2.1.6"
+    "xilophor-LethalNetworkAPI-3.3.1"
   ]
 }
