@@ -1,6 +1,11 @@
 
 # Changelog #
 
+## 1.10.0 ##
+
+- Fix Power Malfunction not triggering on Experimentation
+- Fix disabled Spark VFXs still triggering light
+
 ## 1.9.3 ##
 
 - Bump version number to indicate v66 compatibility

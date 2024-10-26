@@ -239,10 +239,10 @@ namespace Malfunctions.Patches
         public static void DebugShowLevelIds()
         {
             /*
-                foreach (SelectableLevel level in StartOfRound.Instance.levels)
-                {
-                    Plugin.logger.LogDebug(level.name);
-                }
+            foreach (SelectableLevel level in StartOfRound.Instance.levels)
+            {
+                Plugin.logger.LogDebug($"Level ID: {level.levelID} / Level Name: {level.name}");
+            }
             */
         }
 
@@ -818,7 +818,7 @@ namespace Malfunctions.Patches
         public static void HandleRollPower(bool result, bool blockLever)
         {
             // Make sure Malfunction can never happen at the company.
-            if (RoundManager.Instance.currentLevel.levelID == 0)
+            if (RoundManager.Instance.currentLevel.name == "CompanyBuildingLevel")
             {
                 State.MalfunctionPower.Reset();
                 return;

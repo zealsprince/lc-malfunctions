@@ -67,17 +67,17 @@ namespace Malfunctions.MonoBehaviours
                 // Make sure we add a bit of randomness to our effect.
                 next = now + Random.Range(delayMin, delayMax);
 
-                // Reset the stop signal being sent.
-                sentStop = false;
-
-                // Let's make sure we don't enable the light until now.
-                pointLight.enabled = true;
-
-                // Flash the light to the maximum set value.
-                currentIntensity = maxIntensity;
-
                 if (!Config.MalfunctionVFXDisableSparks.Value)
                 {
+                    // Reset the stop signal being sent.
+                    sentStop = false;
+
+                    // Let's make sure we don't enable the light until now.
+                    pointLight.enabled = true;
+
+                    // Flash the light to the maximum set value.
+                    currentIntensity = maxIntensity;
+
                     if (!Config.MalfunctionVFXDisableSparksSound.Value)
                     {
                         // Play the zap sound.
