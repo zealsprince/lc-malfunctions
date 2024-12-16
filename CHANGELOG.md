@@ -1,6 +1,10 @@
 
 # Changelog #
 
+## 1.10.1 ##
+
+- Bump version number to indicate v69 compatibility
+
 ## 1.10.0 ##
 
 - Fix Power Malfunction not triggering on Experimentation
