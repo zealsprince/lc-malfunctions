@@ -34,100 +34,100 @@
     <WarningLevel>4</WarningLevel>
     <NoWarn>IDE0051</NoWarn>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>D:\Lethal Company IDE\Lethal Company_Data\Managed\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="netstandard">
-      <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\netstandard.dll</HintPath>
+      <HintPath>D:\Lethal Company IDE\Lethal Company_Data\Managed\netstandard.dll</HintPath>
     </Reference>
     <Reference Include="Unity.AI.Navigation, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\Unity.AI.Navigation.dll</HintPath>
+      <HintPath>D:\Lethal Company IDE\Lethal Company_Data\Managed\Unity.AI.Navigation.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Animation.Rigging, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\Unity.Animation.Rigging.dll</HintPath>
+      <HintPath>D:\Lethal Company IDE\Lethal Company_Data\Managed\Unity.Animation.Rigging.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Collections, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\Unity.Collections.dll</HintPath>
+      <HintPath>D:\Lethal Company IDE\Lethal Company_Data\Managed\Unity.Collections.dll</HintPath>
     </Reference>
     <Reference Include="Unity.InputSystem, Version=1.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\Unity.InputSystem.dll</HintPath>
+      <HintPath>D:\Lethal Company IDE\Lethal Company_Data\Managed\Unity.InputSystem.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Netcode.Components, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\Unity.Netcode.Components.dll</HintPath>
+      <HintPath>D:\Lethal Company IDE\Lethal Company_Data\Managed\Unity.Netcode.Components.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.Netcode.Runtime Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\Unity.Netcode.Runtime.dll</HintPath>
-    </Reference>
+    <Reference Include="Unity.Netcode.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="Unity.RenderPipelines.HighDefinition.Runtime, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\Unity.RenderPipelines.HighDefinition.Runtime.dll</HintPath>
+      <HintPath>D:\Lethal Company IDE\Lethal Company_Data\Managed\Unity.RenderPipelines.HighDefinition.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>D:\Lethal Company IDE\Lethal Company_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AnimationModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
+      <HintPath>D:\Lethal Company IDE\Lethal Company_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AssetBundleModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+      <HintPath>D:\Lethal Company IDE\Lethal Company_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>D:\Lethal Company IDE\Lethal Company_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.VFXModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\UnityEngine.VFXModule.dll</HintPath>
+      <HintPath>D:\Lethal Company IDE\Lethal Company_Data\Managed\UnityEngine.VFXModule.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+      <HintPath>D:\Lethal Company IDE\Lethal Company_Data\Managed\Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.VideoModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\UnityEngine.VideoModule.dll</HintPath>
+      <HintPath>D:\Lethal Company IDE\Lethal Company_Data\Managed\UnityEngine.VideoModule.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="ClientNetworkTransform, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\ClientNetworkTransform.dll</HintPath>
+      <HintPath>D:\Lethal Company IDE\Lethal Company_Data\Managed\ClientNetworkTransform.dll</HintPath>
     </Reference>
     <Reference Include="DissonanceVoip, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\DissonanceVoip.dll</HintPath>
+      <HintPath>D:\Lethal Company IDE\Lethal Company_Data\Managed\DissonanceVoip.dll</HintPath>
     </Reference>
     <Reference Include="Facepunch Transport for Netcode for GameObjects, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\Facepunch Transport for Netcode for GameObjects.dll</HintPath>
+      <HintPath>D:\Lethal Company IDE\Lethal Company_Data\Managed\Facepunch Transport for Netcode for GameObjects.dll</HintPath>
     </Reference>
     <Reference Include="Facepunch.Steamworks.Win64, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\Facepunch.Steamworks.Win64.dll</HintPath>
+      <HintPath>D:\Lethal Company IDE\Lethal Company_Data\Managed\Facepunch.Steamworks.Win64.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>E:\Lethal Company IDE\Lethal Company_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath>D:\Lethal Company IDE\Lethal Company_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
-      <HintPath>E:\Lethal Company IDE\BepInEx\core\0Harmony.dll</HintPath>
+      <HintPath>D:\Lethal Company IDE\BepInEx\core\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx">
-      <HintPath>E:\Lethal Company IDE\BepInEx\core\BepInEx.dll</HintPath>
+      <HintPath>D:\Lethal Company IDE\BepInEx\core\BepInEx.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx.AssemblyPublicizer, Version=0.4.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\BepInEx.AssemblyPublicizer.MSBuild.0.4.1\lib\net472\BepInEx.AssemblyPublicizer.dll</HintPath>
@@ -136,18 +136,18 @@
       <HintPath>..\packages\BepInEx.AssemblyPublicizer.MSBuild.0.4.1\lib\net472\BepInEx.AssemblyPublicizer.MSBuild.dll</HintPath>
     </Reference>
     <Reference Include="OdinSerializer">
-      <HintPath>E:\Lethal Company IDE\BepInEx\plugins\Odin Serializer\OdinSerializer.dll</HintPath>
+      <HintPath>D:\Lethal Company IDE\BepInEx\plugins\Odin Serializer\OdinSerializer.dll</HintPath>
     </Reference>
     <Reference Include="LethalNetworkAPI">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>E:\Lethal Company IDE\BepInEx\plugins\LethalNetworkAPI\LethalNetworkAPI.dll</HintPath>
+      <HintPath>D:\Lethal Company IDE\BepInEx\plugins\LethalNetworkAPI\LethalNetworkAPI.dll</HintPath>
     </Reference>
     <!--
     <Reference Include="LethalLib">
-      <HintPath>E:\Lethal Company IDE\BepInEx\plugins\Evaisa-LethalLib\LethalLib\LethalLib.dll</HintPath>
+      <HintPath>D:\Lethal Company IDE\BepInEx\plugins\Evaisa-LethalLib\LethalLib\LethalLib.dll</HintPath>
     </Reference>
     <Reference Include="TerminalApi">
-      <HintPath>E:\Lethal Company IDE\BepInEx\plugins\NotAtomicBomb-TerminalApi\TerminalApi.dll</HintPath>
+      <HintPath>D:\Lethal Company IDE\BepInEx\plugins\NotAtomicBomb-TerminalApi\TerminalApi.dll</HintPath>
     </Reference>
     -->
   </ItemGroup>
@@ -176,7 +176,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /y "$(ProjectDir)bin\$(ProjectName).dll" "E:\Lethal Company IDE\BepInEx\plugins\zealsprince-Malfunctions"</PostBuildEvent>
+    <PostBuildEvent>xcopy /y "$(ProjectDir)bin\$(ProjectName).dll" "D:\Lethal Company IDE\BepInEx\plugins\zealsprince-Malfunctions"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>
