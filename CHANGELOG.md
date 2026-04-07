@@ -1,6 +1,11 @@
 
 # Changelog #
 
+## 1.10.3 ##
+
+- Bump version number to indicate v80/v81 compatibility
+
+
 ## 1.10.2 ##
 
 - Bump version number to indicate v73 compatibility
